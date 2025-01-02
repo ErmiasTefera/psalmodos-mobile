@@ -1,0 +1,85 @@
+# See https://help.github.com/en/articles/ignoring-files-in-git for more about ignoring files.
+
+# dependencies
+node_modules/
+yarn.lock
+package-lock.json
+
+# expo
+.expo/
+expo.json.bak
+
+# temporary files
+.babelrc.js
+.eslintrc.js
+.flowconfig
+.prettierrc.js
+.stylelintrc.js
+babel.config.js
+tsconfig.json
+
+# testing
+coverage/
+
+# IDE files
+.idea/
+*.iml
+
+# system files
+.DS_Store
+Thumbs.db
+
+# logs
+npm-debug.log*
+yarn-error.log*
+
+# Visual Studio Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+*.pdb
+*.suo
+*.user
+*.sln
+*.vcxproj
+*.vcxproj.filters
+
+# IntelliJ IDEA
+*.iml
+.idea/
+
+# Android
+android/app/build/
+android/app/src/main/AndroidManifest.xml
+android/app/src/main/java/
+android/app/src/main/res/
+android/app/src/main/assets/
+android/app/src/main/cpp/
+
+# iOS
+ios/build/
+ios/Pods/
+
+# Expo specific
+.expo-shared/
+.expo-updates/
+.expo-temp/
+
+# Metro bundler
+.metro.config.js
+
+# Generated files
+dist/
+build/
+
+# Temporary files
+*.log
+*.tsbuildinfo
+*.tgz
+
+# Editor preferences
+*.sublime-project
+*.sublime-workspace
