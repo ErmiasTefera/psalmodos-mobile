@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { EllipsisVertical } from 'lucide-react-native';
-
+import { Link } from 'expo-router';
 
 export default function HomeScreen() {
   const [categories, setCategories] = React.useState([
@@ -22,13 +22,14 @@ export default function HomeScreen() {
   ]);
 
   return (
-    <View className="mt-8 p-4 pt-8 flex gap-4 bg-d h-full">
+    <View className="p-4 flex gap-4 bg-d h-full pt-20">
       <View className="flex flex-row gap-4">
         <View className="flex-1">
           <FlatList
             data={categories}
             renderItem={({ item }) => (
-              <Card className="flex-1 mt-2">
+              <Link className="mt-2"  href="/mezmur-list">
+              <Card className="w-full" >
                 <CardHeader className="flex flex-row justify-between">
                   <View>
                   <CardTitle className="text-xl">{item.name}</CardTitle>
@@ -36,15 +37,16 @@ export default function HomeScreen() {
                     <Text>{item.numberOfSongs} መዝሙሮች</Text>
                   </CardDescription>
                   </View>
-                  <EllipsisVertical />
+                  <EllipsisVertical color="black" size={18} />
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex flex-col items-end">
                   <Text>Last updated</Text>
                   <CardDescription>
                     <Text>{item.lastUpdated}</Text>
                   </CardDescription>
                 </CardContent>
               </Card>
+              </Link>
             )}
           />
         </View>
