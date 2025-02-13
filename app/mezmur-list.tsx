@@ -15,7 +15,7 @@ export default function MezmurList() {
     {
       id: "2",
       artist: "Mirtinesh",
-      title: "Seregelawochih",
+      title: "እሴብሕ ጸጋኪ",
       createdDate: "2021-09-01",
       duration: "5:01",
       isPlaying: false,

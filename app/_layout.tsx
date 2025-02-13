@@ -7,8 +7,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { PortalHost } from "@rn-primitives/portal";
+import { Appearance, useColorScheme,  } from "react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -20,6 +20,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
+    Appearance.setColorScheme("light");
     if (loaded) {
       SplashScreen.hideAsync();
     }
