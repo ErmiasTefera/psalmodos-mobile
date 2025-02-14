@@ -1,40 +1,87 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import Slider from "@react-native-community/slider";
-import {
-  SkipBack,
-  Play,
-  Pause,
-  SkipForward,
-} from "lucide-react-native";
+import { SkipBack, Play, Pause, SkipForward } from "lucide-react-native";
+import TrackPlayer, {
+  Capability,
+  usePlaybackState,
+  useProgress,
+  State,
+} from "react-native-track-player";
+import mezmurs from "../../assets/data";
 
 const MusicPlayer = () => {
-  const [trackProgress, setTrackProgress] = useState(177);
-  const trackDuration = 280; // Example: 3 minutes (180 seconds)
-  const [isPlaying, setIsPlaying] = useState(true);
+  const mezmursCount = mezmurs.length;
+  const [trackIndex, setTrackIndex] = useState(0);
+  const [trackTitle, setTrackTitle] = useState<string | undefined>();
+  const [trackArtist, setTrackArtist] = useState<string | undefined>();
 
-  const togglePlayPause = () => setIsPlaying(!isPlaying);
-  
-  useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
+  const trackProgress = useProgress();
+  const playBackState = usePlaybackState();
 
-    if (isPlaying) {
-      interval = setInterval(() => {
-        setTrackProgress((prev) => {
-          if (prev < trackDuration) {
-            return prev + 1;
-          } else {
-            clearInterval(interval!);
-            return prev;
-          }
-        });
-      }, 1000);
-    } else if (!isPlaying && interval) {
-      clearInterval(interval);
+  const setupPlayer = async () => {
+    try {
+      await TrackPlayer.setupPlayer();
+      await TrackPlayer.updateOptions({
+        capabilities: [
+          Capability.Play,
+          Capability.Pause,
+          Capability.SkipToNext,
+          Capability.SkipToPrevious,
+        ],
+      });
+      await TrackPlayer.add(mezmurs);
+      await TrackPlayer.play();
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    return () => clearInterval(interval!);
-  }, [isPlaying]);
+  const getTrackData = async () => {
+    let trackIndex = await TrackPlayer.getActiveTrackIndex();
+    if (trackIndex == null) {
+      return;
+    }
+    let trackObject = await TrackPlayer.getTrack(trackIndex);
+    if (trackObject === null || trackObject === undefined) {
+      return;
+    }
+    setTrackIndex(trackIndex);
+    setTrackTitle(trackObject.title);
+    setTrackArtist(trackObject.artist);
+  };
+
+  const togglePlayBack = async () => {
+    const activeTrack = await TrackPlayer.getActiveTrack();
+    if (activeTrack != null) {
+      if (
+        playBackState.state == State.Paused ||
+        playBackState.state == State.Ready
+      ) {
+        await TrackPlayer.play();
+      } else {
+        await TrackPlayer.pause();
+      }
+    }
+  };
+
+  const skipToNext = async () => {
+    if (trackIndex < mezmursCount - 1) {
+      await TrackPlayer.skipToNext();
+      getTrackData();
+    }
+  };
+
+  const skipToPrevious = async () => {
+    if (trackIndex > 0) {
+      await TrackPlayer.skipToPrevious();
+      getTrackData();
+    }
+  };
+
+  useEffect(() => {
+    setupPlayer();
+  }, []);
 
   return (
     <View className="items-center bg-white p-5 rounded-lg shadow-md">
@@ -42,38 +89,38 @@ const MusicPlayer = () => {
       <Slider
         style={{ width: "100%", height: 20 }}
         minimumValue={0}
-        maximumValue={trackDuration}
-        value={trackProgress}
+        maximumValue={trackProgress.duration}
+        value={trackProgress.position}
         minimumTrackTintColor="#333"
         maximumTrackTintColor="#ccc"
         thumbTintColor="#333"
-        onValueChange={(value) => setTrackProgress(value)}
+        onSlidingComplete={async (value) => await TrackPlayer.seekTo(value)}
       />
       {/* Time Indicators */}
       <View className="flex-row justify-between w-full mt-1">
         <Text className="text-gray-700 text-sm">
-          {formatTime(trackProgress)}
+          {formatTime(trackProgress.position)}
         </Text>
         <Text className="text-gray-700 text-sm">{`-${formatTime(
-          trackDuration - trackProgress
+          trackProgress.duration - trackProgress.position
         )}`}</Text>
       </View>
       {/* Controls */}
       <View className="flex-row items-center justify-between w-1/2">
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => skipToPrevious()}>
           <SkipBack size={24} color="#333" />
         </TouchableOpacity>
         <TouchableOpacity
           className="bg-gray-800 w-16 h-16 rounded-full items-center justify-center"
-          onPress={togglePlayPause}
+          onPress={() => togglePlayBack()}
         >
-          {isPlaying ? (
+          {playBackState.state === State.Playing ? (
             <Pause size={32} color="white" />
           ) : (
             <Play size={32} color="white" />
           )}
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => skipToNext()}>
           <SkipForward size={24} color="#333" />
         </TouchableOpacity>
       </View>

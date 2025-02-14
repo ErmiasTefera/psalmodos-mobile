@@ -6,12 +6,16 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import TrackPlayer from 'react-native-track-player'
+import { RNTPService } from '../services/track-player.service'
 
 import { PortalHost } from "@rn-primitives/portal";
 import { Appearance, useColorScheme,  } from "react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+TrackPlayer.registerPlaybackService(() => RNTPService)
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
