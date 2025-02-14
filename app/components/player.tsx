@@ -2,17 +2,15 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import Slider from "@react-native-community/slider";
 import {
-  Shuffle,
   SkipBack,
   Play,
   Pause,
   SkipForward,
-  Repeat,
 } from "lucide-react-native";
 
 const MusicPlayer = () => {
   const [trackProgress, setTrackProgress] = useState(177);
-  const trackDuration = 180; // Example: 3 minutes (180 seconds)
+  const trackDuration = 280; // Example: 3 minutes (180 seconds)
   const [isPlaying, setIsPlaying] = useState(true);
 
   const togglePlayPause = () => setIsPlaying(!isPlaying);
