@@ -1,26 +1,29 @@
-import { FlatList, View } from "react-native";
-import React from "react";
+import { FlatList, View, Text } from "react-native";
+import React, { useEffect } from "react";
 import MezmurListItem from "~/components/MezmurListItem";
+import TrackPlayer from "react-native-track-player";
+import FloatingTrackControl from "./components/floating-track-control";
+import listOfMezmurs from "~/assets/data";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 
 export default function MezmurList() {
-  const [mezmurs, setMezmurs] = React.useState([
-    {
-      id: "1",
-      artist: "Abel",
-      title: "Temesgen",
-      createdDate: "2021-09-01",
-      duration: "3:43",
-      isPlaying: false,
-    },
-    {
-      id: "2",
-      artist: "Mirtinesh",
-      title: "እሴብሕ ጸጋኪ",
-      createdDate: "2021-09-01",
-      duration: "5:01",
-      isPlaying: false,
-    },
-  ]);
+  const { title } = useLocalSearchParams();
+  const navigation = useNavigation();
+  const [mezmurs, setMezmurs] = React.useState(listOfMezmurs);
+
+  const setPlayerTracks = async () => {
+    try {
+      const mezmurTracks = mezmurs.map((mezmur) => ({
+        id: mezmur.id,
+        url: mezmur.url,
+        title: mezmur.title,
+        artist: mezmur.artist,
+      }));
+      await TrackPlayer.add(mezmurTracks);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const togglePlay = (id: string) => {
     setMezmurs((prevMezmurs) =>
@@ -32,21 +35,35 @@ export default function MezmurList() {
           // if the mezmur is not the one we want to toggle
           mezmur.isPlaying = false;
         }
-        
+
         return mezmur;
-      }
-      )
+      })
     );
   };
 
+  useEffect(() => {
+    setPlayerTracks();
+  }, []);
+
+
+  useEffect(() => {
+    if (title) {
+      navigation.setOptions({ title: title });
+    }
+  }, [title, navigation]);
+
   return (
-    <View className="p-3">
+    <View className="p-3 h-full justify-between">
       <FlatList
         data={mezmurs}
         renderItem={({ item }) => (
           <MezmurListItem item={item} togglePlay={togglePlay} />
         )}
       />
+
+      <View className="">
+        <FloatingTrackControl />
+      </View>
     </View>
   );
 }

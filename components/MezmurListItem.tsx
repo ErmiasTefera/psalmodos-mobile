@@ -12,17 +12,17 @@ export default function MezmurListItem({ item, togglePlay }) {
         <View className="flex flex-row gap-3 items-center">
           {item.isPlaying ? (
             <View
-              className="border bg-blue-500 border-blue-500 rounded-full p-3 items-center"
+              className="border bg-black border-black rounded-full p-3 items-center"
               onTouchEnd={() => togglePlay(item.id)}
             >
               <Pause color={"white"} />
             </View>
           ) : (
             <View
-              className="border border-blue-500 rounded-full p-3 items-center"
+              className="border border-black bg-black rounded-full p-3 items-center"
               onTouchEnd={() => togglePlay(item.id)}
             >
-              <Play color={"blue"} fill={'blue'} />
+              <Play color={"white"} fill={'#333'} />
             </View>
           )}
         </View>
@@ -37,7 +37,7 @@ export default function MezmurListItem({ item, togglePlay }) {
           <View className="flex flex-row justify-between w-full items-center">
             <View className="flex gap-1">
               <Text className="font-bold">{item.title}</Text>
-              <Text className="text-gray-500">{item.artist}</Text>
+              <Text className="text-gray-500">{item.artist || 'Unknown'}</Text>
             </View>
             <Text className="text-gray-500">{item.duration}</Text>
           </View>

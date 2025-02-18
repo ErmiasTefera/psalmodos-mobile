@@ -1,35 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import Slider from "@react-native-community/slider";
-import { SkipBack, Play, Pause, SkipForward } from "lucide-react-native";
+import { Play, Pause, SkipBack, SkipForward, Music } from "lucide-react-native";
+
 import TrackPlayer, {
   usePlaybackState,
-  useProgress,
   State,
 } from "react-native-track-player";
 import mezmurs from "../../assets/data";
+import { useNavigation } from "expo-router";
 
-const MusicPlayer = () => {
+const FloatingTrackControl = () => {
   const mezmursCount = mezmurs.length;
   const [trackIndex, setTrackIndex] = useState(0);
   const [trackTitle, setTrackTitle] = useState<string | undefined>();
-  const [trackArtist, setTrackArtist] = useState<string | undefined>();
+  const [trackId, setTrackId] = useState<string | undefined>();
 
-  const trackProgress = useProgress();
   const playBackState = usePlaybackState();
+
+  const navigation = useNavigation();
 
   const setupPlayer = async () => {
     try {
       await getTrackData();
-      await TrackPlayer.play();
+      // await TrackPlayer.play();
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
+    console.log("Setting up player");
     setupPlayer();
-  }, []);
+  }, [navigation]);
 
   const getTrackData = async () => {
     let trackIndex = await TrackPlayer.getActiveTrackIndex();
@@ -37,12 +39,13 @@ const MusicPlayer = () => {
       return;
     }
     let trackObject = await TrackPlayer.getTrack(trackIndex);
+    console.log(trackObject)
     if (trackObject === null || trackObject === undefined) {
       return;
     }
+    setTrackId(trackObject.id);
     setTrackIndex(trackIndex);
     setTrackTitle(trackObject.title);
-    setTrackArtist(trackObject.artist);
   };
 
   const togglePlayBack = async () => {
@@ -73,56 +76,45 @@ const MusicPlayer = () => {
     }
   };
 
+    // Navigate to Track Details
+    const goToTrackDetails = () => {
+      navigation.navigate("mezmur-detail", { id: trackId, title: trackTitle });
+    };
+
   return (
-    <View className="items-center bg-white p-5 rounded-lg shadow-md">
-      {/* Track Progress Slider */}
-      <Slider
-        style={{ width: "100%", height: 20 }}
-        minimumValue={0}
-        maximumValue={trackProgress.duration}
-        value={trackProgress.position}
-        minimumTrackTintColor="#333"
-        maximumTrackTintColor="#ccc"
-        thumbTintColor="#333"
-        onSlidingComplete={async (value) => await TrackPlayer.seekTo(value)}
-      />
-      {/* Time Indicators */}
-      <View className="flex-row justify-between w-full mt-1">
-        <Text className="text-gray-700 text-sm">
-          {formatTime(trackProgress.position)}
-        </Text>
-        <Text className="text-gray-700 text-sm">{`-${formatTime(
-          trackProgress.duration - trackProgress.position
-        )}`}</Text>
+    <TouchableOpacity onPress={goToTrackDetails} activeOpacity={0.8}>
+      <View className="flex-row items-center bg-white shadow-md rounded-xl p-4 w-full">
+      {/* Music Icon using Lucide */}
+      <View className="w-12 h-12 bg-gray-100 rounded-lg items-center justify-center">
+        <Music size={24} color="gray" />
       </View>
+
+      {/* Track Name */}
+      <Text className="text-gray-800 text-lg ml-3 flex-1">{trackTitle}</Text>
+
       {/* Controls */}
-      <View className="flex-row items-center justify-between w-1/2">
-        <TouchableOpacity onPress={() => skipToPrevious()}>
+      <View className="flex-row items-center gap-4">
+        {/* Previous Button */}
+        <TouchableOpacity onPress={skipToPrevious}>
           <SkipBack size={24} color="#333" />
         </TouchableOpacity>
+
+        {/* Play/Pause Button */}
         <TouchableOpacity
-          className="bg-gray-800 w-16 h-16 rounded-full items-center justify-center"
-          onPress={() => togglePlayBack()}
+          onPress={togglePlayBack}
+          className="bg-gray-800 w-10 h-10 rounded-full items-center justify-center"
         >
-          {playBackState.state === State.Playing ? (
-            <Pause size={32} color="white" />
-          ) : (
-            <Play size={32} color="white" />
-          )}
+          {playBackState.state === State.Playing ? <Pause size={24} color="white" /> : <Play size={24} color="white" />}
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => skipToNext()}>
+
+        {/* Next Button */}
+        <TouchableOpacity onPress={skipToNext}>
           <SkipForward size={24} color="#333" />
         </TouchableOpacity>
       </View>
     </View>
+    </TouchableOpacity>
   );
 };
 
-// Helper function to format time
-const formatTime = (seconds: number) => {
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
-};
-
-export default MusicPlayer;
+export default FloatingTrackControl;
