@@ -20,7 +20,7 @@ const listOfMezmurs = [
     createdDate: "2021-09-01",
     duration: "5:01",
     isPlaying: false,
-    url: "https://chtbl.com/track/9E947E/api.spreaker.com/download/episode/52096290/def_hc_perfetti_v2_loud.mp3",
+    url: "https://api.spreaker.com/download/episode/43447400/letteraoreste.mp3",
     lyrics: `
 እሴብሕ ጸጋኪ ኦ እግዝእትየ ማርያም
 ዕጽ ልምልምት ወፍሬ ጥዕምት /3/

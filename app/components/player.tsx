@@ -21,7 +21,6 @@ const MusicPlayer = () => {
   const setupPlayer = async () => {
     try {
       await getTrackData();
-      await TrackPlayer.play();
     } catch (error) {
       console.log(error);
     }

@@ -4,6 +4,7 @@ import React from "react";
 import { Card, CardContent } from "~/components/ui/card";
 import { Play, Pause } from "lucide-react-native";
 import { Link } from "expo-router";
+import { usePlaybackState } from "react-native-track-player";
 
 export default function MezmurListItem({ item, togglePlay }) {
   return (
@@ -13,14 +14,14 @@ export default function MezmurListItem({ item, togglePlay }) {
           {item.isPlaying ? (
             <View
               className="border bg-black border-black rounded-full p-3 items-center"
-              onTouchEnd={() => togglePlay(item.id)}
+              onTouchEnd={() => togglePlay(item)}
             >
               <Pause color={"white"} />
             </View>
           ) : (
             <View
               className="border border-black bg-black rounded-full p-3 items-center"
-              onTouchEnd={() => togglePlay(item.id)}
+              onTouchEnd={() => togglePlay(item)}
             >
               <Play color={"white"} fill={'#333'} />
             </View>

@@ -8,6 +8,7 @@ import TrackPlayer, {
 } from "react-native-track-player";
 import mezmurs from "../../assets/data";
 import { useNavigation } from "expo-router";
+import useCurrentTrack from "~/hooks/useTrackPlayerEvents";
 
 const FloatingTrackControl = () => {
   const mezmursCount = mezmurs.length;
@@ -17,21 +18,21 @@ const FloatingTrackControl = () => {
 
   const playBackState = usePlaybackState();
 
+  const currentTrack = useCurrentTrack();
+
   const navigation = useNavigation();
 
   const setupPlayer = async () => {
     try {
       await getTrackData();
-      // await TrackPlayer.play();
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    console.log("Setting up player");
     setupPlayer();
-  }, [navigation]);
+  }, [navigation, currentTrack]);
 
   const getTrackData = async () => {
     let trackIndex = await TrackPlayer.getActiveTrackIndex();
@@ -39,7 +40,6 @@ const FloatingTrackControl = () => {
       return;
     }
     let trackObject = await TrackPlayer.getTrack(trackIndex);
-    console.log(trackObject)
     if (trackObject === null || trackObject === undefined) {
       return;
     }
