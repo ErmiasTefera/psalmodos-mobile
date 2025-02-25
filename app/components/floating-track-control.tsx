@@ -65,54 +65,66 @@ const FloatingTrackControl = () => {
   const skipToNext = async () => {
     if (trackIndex < mezmursCount - 1) {
       await TrackPlayer.skipToNext();
-      getTrackData();
+      await getTrackData();
+      TrackPlayer.play();
     }
   };
 
   const skipToPrevious = async () => {
     if (trackIndex > 0) {
       await TrackPlayer.skipToPrevious();
-      getTrackData();
+      await getTrackData();
+      TrackPlayer.play();
     }
   };
 
-    // Navigate to Track Details
-    const goToTrackDetails = () => {
-      navigation.navigate("mezmur-detail", { id: trackId, title: trackTitle });
-    };
+  // Navigate to Track Details
+  const goToTrackDetails = () => {
+    navigation.navigate("mezmur-detail", { id: trackId, title: trackTitle });
+  };
 
+  if (currentTrack === null && playBackState.state === State.None) {
+    return null;
+  }
   return (
     <TouchableOpacity onPress={goToTrackDetails} activeOpacity={0.8}>
       <View className="flex-row items-center bg-white shadow-md rounded-xl p-4 w-full">
-      {/* Music Icon using Lucide */}
-      <View className="w-12 h-12 bg-gray-100 rounded-lg items-center justify-center">
-        <Music size={24} color="gray" />
+        {/* Music Icon using Lucide */}
+        <View className="w-12 h-12 bg-gray-100 rounded-lg items-center justify-center">
+          <Music size={24} color="gray" />
+        </View>
+
+        {/* Track Name */}
+        <Text className="text-gray-800 text-lg ml-3 flex-1">{trackTitle}</Text>
+
+        {/* Controls */}
+        <View className="flex-row items-center gap-4">
+          {/* Previous Button */}
+          <TouchableOpacity onPress={skipToPrevious}>
+            <SkipBack size={24} color={trackIndex > 0 ? "#333" : "gray"} />
+          </TouchableOpacity>
+
+          {/* Play/Pause Button */}
+          <TouchableOpacity
+            onPress={togglePlayBack}
+            className="bg-gray-800 w-10 h-10 rounded-full items-center justify-center"
+          >
+            {playBackState.state === State.Playing ? (
+              <Pause size={24} color="white" />
+            ) : (
+              <Play size={24} color="white" />
+            )}
+          </TouchableOpacity>
+
+          {/* Next Button */}
+          <TouchableOpacity onPress={skipToNext}>
+            <SkipForward
+              size={24}
+              color={trackIndex === mezmursCount - 1 ? "gray" : "#333"}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-
-      {/* Track Name */}
-      <Text className="text-gray-800 text-lg ml-3 flex-1">{trackTitle}</Text>
-
-      {/* Controls */}
-      <View className="flex-row items-center gap-4">
-        {/* Previous Button */}
-        <TouchableOpacity onPress={skipToPrevious}>
-          <SkipBack size={24} color="#333" />
-        </TouchableOpacity>
-
-        {/* Play/Pause Button */}
-        <TouchableOpacity
-          onPress={togglePlayBack}
-          className="bg-gray-800 w-10 h-10 rounded-full items-center justify-center"
-        >
-          {playBackState.state === State.Playing ? <Pause size={24} color="white" /> : <Play size={24} color="white" />}
-        </TouchableOpacity>
-
-        {/* Next Button */}
-        <TouchableOpacity onPress={skipToNext}>
-          <SkipForward size={24} color="#333" />
-        </TouchableOpacity>
-      </View>
-    </View>
     </TouchableOpacity>
   );
 };

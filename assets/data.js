@@ -4,7 +4,7 @@ const listOfMezmurs = [
     artist: "ዘማሪ ዲያቆን አቤል መክብብ",
     title: "ተመስገን",
     createdDate: "2021-09-01",
-    duration: "3:43",
+    duration: "2:37",
     isPlaying: false,
     url: "https://traffic.megaphone.fm/FODL8281657475.mp3?updated=1673441802",
     lyrics: `
@@ -18,7 +18,7 @@ const listOfMezmurs = [
     artist: "",
     title: "እሴብሕ ጸጋኪ",
     createdDate: "2021-09-01",
-    duration: "5:01",
+    duration: "1:26",
     isPlaying: false,
     url: "https://api.spreaker.com/download/episode/43447400/letteraoreste.mp3",
     lyrics: `

@@ -12,8 +12,6 @@ import mezmurs from "../../assets/data";
 const MusicPlayer = () => {
   const mezmursCount = mezmurs.length;
   const [trackIndex, setTrackIndex] = useState(0);
-  const [trackTitle, setTrackTitle] = useState<string | undefined>();
-  const [trackArtist, setTrackArtist] = useState<string | undefined>();
 
   const trackProgress = useProgress();
   const playBackState = usePlaybackState();
@@ -31,17 +29,15 @@ const MusicPlayer = () => {
   }, []);
 
   const getTrackData = async () => {
-    let trackIndex = await TrackPlayer.getActiveTrackIndex();
-    if (trackIndex == null) {
+    let currentTrackIndex = await TrackPlayer.getActiveTrackIndex();
+    if (currentTrackIndex == null) {
       return;
     }
-    let trackObject = await TrackPlayer.getTrack(trackIndex);
+    let trackObject = await TrackPlayer.getTrack(currentTrackIndex);
     if (trackObject === null || trackObject === undefined) {
       return;
     }
-    setTrackIndex(trackIndex);
-    setTrackTitle(trackObject.title);
-    setTrackArtist(trackObject.artist);
+    setTrackIndex(currentTrackIndex);
   };
 
   const togglePlayBack = async () => {
@@ -61,14 +57,16 @@ const MusicPlayer = () => {
   const skipToNext = async () => {
     if (trackIndex < mezmursCount - 1) {
       await TrackPlayer.skipToNext();
-      getTrackData();
+      await getTrackData();
+      TrackPlayer.play();
     }
   };
 
   const skipToPrevious = async () => {
     if (trackIndex > 0) {
       await TrackPlayer.skipToPrevious();
-      getTrackData();
+      await getTrackData();
+      TrackPlayer.play();
     }
   };
 
@@ -97,7 +95,7 @@ const MusicPlayer = () => {
       {/* Controls */}
       <View className="flex-row items-center justify-between w-1/2">
         <TouchableOpacity onPress={() => skipToPrevious()}>
-          <SkipBack size={24} color="#333" />
+          <SkipBack size={32} color={trackIndex > 0 ? '#333' : 'gray'} />
         </TouchableOpacity>
         <TouchableOpacity
           className="bg-gray-800 w-16 h-16 rounded-full items-center justify-center"
@@ -110,7 +108,7 @@ const MusicPlayer = () => {
           )}
         </TouchableOpacity>
         <TouchableOpacity onPress={() => skipToNext()}>
-          <SkipForward size={24} color="#333" />
+          <SkipForward size={32} color={trackIndex === mezmursCount - 1 ? 'gray' : '#333'} />
         </TouchableOpacity>
       </View>
     </View>

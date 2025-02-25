@@ -37,6 +37,7 @@ export default function TabLayout() {
         name="playlist"
         options={{
           title: 'Playlist',
+          headerShown: true,
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />

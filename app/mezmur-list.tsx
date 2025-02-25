@@ -19,7 +19,7 @@ export default function MezmurList() {
   const setPlayerTracks = async () => {
     try {
       const tracks = await TrackPlayer.getQueue();
-      mezmurs.forEach((mezmur) => {
+      mezmurs.forEach((mezmur, index) => {
         const track = {
           id: mezmur.id,
           url: mezmur.url,
@@ -27,7 +27,7 @@ export default function MezmurList() {
           artist: mezmur.artist,
         };
         // if the track is already in the queue skip adding it
-        if (tracks.find((t) => t.id === mezmur.id)) {
+        if (tracks.find((track, trackIndex) => trackIndex === index)) {
           return;
         }
         // add the track to the queue
@@ -84,9 +84,7 @@ export default function MezmurList() {
     TrackPlayer.getActiveTrackIndex().then((index) => {
       setMezmurs((prevMezmurs) => {
         return prevMezmurs.map((mezmur, i) => {
-          if (i === index) {
-            mezmur.isPlaying = playBackState.state === State.Playing;
-          }
+          mezmur.isPlaying = i === index && playBackState.state === State.Playing;
           return mezmur;
         });
       });
