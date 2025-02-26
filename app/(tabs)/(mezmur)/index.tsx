@@ -7,9 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { EllipsisVertical } from "lucide-react-native";
 import { Link } from "expo-router";
-import FloatingTrackControl from "../components/floating-track-control";
 
 export default function HomeScreen() {
   const [categories, setCategories] = React.useState([
@@ -32,7 +30,7 @@ export default function HomeScreen() {
               <Link
                 className="mt-2"
                 href={{
-                  pathname: "/mezmur-list",
+                  pathname: "./(mezmur)/mezmur-list",
                   params: { id: item.key, title: item.name },
                 }}
               >
@@ -44,7 +42,6 @@ export default function HomeScreen() {
                         <Text>{item.numberOfSongs} መዝሙሮች</Text>
                       </CardDescription>
                     </View>
-                    <EllipsisVertical color="black" size={18} />
                   </CardHeader>
                   <CardContent className="flex flex-col items-end">
                     <Text>Last updated</Text>
@@ -59,7 +56,6 @@ export default function HomeScreen() {
         </View>
       </View>
       <View>
-        <FloatingTrackControl />
       </View>
     </View>
   );

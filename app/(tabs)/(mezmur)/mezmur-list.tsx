@@ -1,20 +1,25 @@
-import { FlatList, View, Text } from "react-native";
+import { FlatList, View } from "react-native";
 import React, { useEffect } from "react";
 import MezmurListItem from "~/components/MezmurListItem";
 import TrackPlayer, {
   State,
-  Track,
   usePlaybackState,
 } from "react-native-track-player";
-import FloatingTrackControl from "./components/floating-track-control";
 import listOfMezmurs from "~/assets/data";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useNavigationSearch } from "~/hooks/useNavigationSearch";
 
 export default function MezmurList() {
   const { title } = useLocalSearchParams();
   const navigation = useNavigation();
   const [mezmurs, setMezmurs] = React.useState(listOfMezmurs);
   const playBackState = usePlaybackState();
+
+  const search = useNavigationSearch({
+    searchBarOptions: {
+      placeholder: "Search Mezmur",
+    },
+  });
 
   const setPlayerTracks = async () => {
     try {
@@ -54,7 +59,7 @@ export default function MezmurList() {
       await TrackPlayer.skip(currentItemIndex);
       await TrackPlayer.play();
     }
-
+ 
     setMezmurs((prevMezmurs) =>
       prevMezmurs.map((mezmur) => {
         // if the mezmur is the one we want to toggle
@@ -84,7 +89,9 @@ export default function MezmurList() {
     TrackPlayer.getActiveTrackIndex().then((index) => {
       setMezmurs((prevMezmurs) => {
         return prevMezmurs.map((mezmur, i) => {
-          mezmur.isPlaying = i === index && playBackState.state === State.Playing;
+          mezmur.isPlaying =
+            i === index && playBackState.state === State.Playing;
+          mezmur.isLoading = i === index && (playBackState.state === State.Buffering || playBackState.state === State.Loading);
           return mezmur;
         });
       });
@@ -92,16 +99,21 @@ export default function MezmurList() {
   }, [playBackState]);
 
   return (
-    <View className="p-3 h-full justify-between">
+    <View className="flex-1">
       <FlatList
+        contentInsetAdjustmentBehavior="automatic"
         data={mezmurs}
         renderItem={({ item }) => (
           <MezmurListItem item={item} togglePlay={togglePlay} key={item.id} />
         )}
       />
 
-      <View className="">
-        <FloatingTrackControl />
+      <View style={{
+        		position: 'absolute',
+            left: 8,
+            right: 8,
+            bottom: 78,
+      }}>
       </View>
     </View>
   );

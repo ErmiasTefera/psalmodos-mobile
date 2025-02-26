@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { Play, Pause, SkipBack, SkipForward, Music } from "lucide-react-native";
+import { Music } from "lucide-react-native";
 
 import TrackPlayer, {
   usePlaybackState,
   State,
 } from "react-native-track-player";
-import mezmurs from "../../assets/data";
+import mezmurs from "~/assets/data";
 import { useNavigation } from "expo-router";
 import useCurrentTrack from "~/hooks/useTrackPlayerEvents";
+import PlayerControls from "~/components/PlayerControls";
 
 const FloatingTrackControl = () => {
   const mezmursCount = mezmurs.length;
@@ -87,43 +88,24 @@ const FloatingTrackControl = () => {
     return null;
   }
   return (
-    <TouchableOpacity onPress={goToTrackDetails} activeOpacity={0.8}>
-      <View className="flex-row items-center bg-white shadow-md rounded-xl p-4 w-full">
+    <TouchableOpacity onPress={goToTrackDetails} activeOpacity={0.8}
+    style={{
+      position: 'absolute',
+      left: 8,
+      right: 8,
+      bottom: 88,
+    }}>
+      <View className="flex-row items-center bg-gray-200 shadow-md rounded-xl p-4 w-full">
         {/* Music Icon using Lucide */}
         <View className="w-12 h-12 bg-gray-100 rounded-lg items-center justify-center">
           <Music size={24} color="gray" />
         </View>
-
+        
         {/* Track Name */}
         <Text className="text-gray-800 text-lg ml-3 flex-1">{trackTitle}</Text>
 
         {/* Controls */}
-        <View className="flex-row items-center gap-4">
-          {/* Previous Button */}
-          <TouchableOpacity onPress={skipToPrevious}>
-            <SkipBack size={24} color={trackIndex > 0 ? "#333" : "gray"} />
-          </TouchableOpacity>
-
-          {/* Play/Pause Button */}
-          <TouchableOpacity
-            onPress={togglePlayBack}
-            className="bg-gray-800 w-10 h-10 rounded-full items-center justify-center"
-          >
-            {playBackState.state === State.Playing ? (
-              <Pause size={24} color="white" />
-            ) : (
-              <Play size={24} color="white" />
-            )}
-          </TouchableOpacity>
-
-          {/* Next Button */}
-          <TouchableOpacity onPress={skipToNext}>
-            <SkipForward
-              size={24}
-              color={trackIndex === mezmursCount - 1 ? "gray" : "#333"}
-            />
-          </TouchableOpacity>
-        </View>
+        <PlayerControls iconSize={24} playButtonClass="w-10 h-10" containerClass="gap-4" loaderSize="small"/>
       </View>
     </TouchableOpacity>
   );

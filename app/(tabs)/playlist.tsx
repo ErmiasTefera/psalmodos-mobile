@@ -1,6 +1,5 @@
-import { ThemedText } from "@/components/ThemedText";
-import { Text } from "react-native";
+import MezmurList from "./(mezmur)/mezmur-list";
 
 export default function TabTwoScreen() {
-  return <ThemedText type="title">Playlist</ThemedText>;
+  return <MezmurList />
 }

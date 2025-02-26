@@ -1,50 +1,55 @@
-import { View } from "react-native";
+import { ActivityIndicator, TouchableOpacity, View } from "react-native";
 import { Text } from "~/components/ui/text";
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent } from "~/components/ui/card";
 import { Play, Pause } from "lucide-react-native";
 import { Link } from "expo-router";
 import { usePlaybackState } from "react-native-track-player";
+import useCurrentTrack from "~/hooks/useTrackPlayerEvents";
 
 export default function MezmurListItem({ item, togglePlay }) {
+  const playBackState = usePlaybackState();
+  const currentTrack = useCurrentTrack();
+
+  const PlaybackIcon = () => {
+    if (item.isLoading) {
+      return <ActivityIndicator size='small' color="white" />;
+    }
+    if (item.isPlaying) {
+      return <Pause color={"white"} />;
+    }
+
+    return <Play color={"white"} fill={"#333"} />;
+  };
+
   return (
     <Card className="w-full mt-2">
       <CardContent className="flex flex-row gap-3 p-3 items-center w-full">
-        <View className="flex flex-row gap-3 items-center">
-          {item.isPlaying ? (
-            <View
-              className="border bg-black border-black rounded-full p-3 items-center"
-              onTouchEnd={() => togglePlay(item)}
-            >
-              <Pause color={"white"} />
-            </View>
-          ) : (
-            <View
-              className="border border-black bg-black rounded-full p-3 items-center"
-              onTouchEnd={() => togglePlay(item)}
-            >
-              <Play color={"white"} fill={'#333'} />
-            </View>
-          )}
-        </View>
+        <TouchableOpacity
+          className={"bg-black rounded-full p-3"}
+          onPress={() => togglePlay(item)}
+        >
+          <PlaybackIcon />
+        </TouchableOpacity>
 
         <View className="flex flex-1">
-        <Link
-          href={{
-            pathname: "/mezmur-detail",
-            params: { id: item.id, title: item.title },
-          }}
-        >
-          <View className="flex flex-row justify-between w-full items-center">
-            <View className="flex gap-1">
-              <Text className="font-bold">{item.title}</Text>
-              <Text className="text-gray-500">{item.artist || 'Unknown'}</Text>
+          <Link
+            href={{
+              pathname: "/mezmur-detail",
+              params: { id: item.id, title: item.title },
+            }}
+          >
+            <View className="flex flex-row justify-between w-full items-center">
+              <View className="flex gap-1">
+                <Text className="font-bold">{item.title}</Text>
+                <Text className="text-gray-500">
+                  {item.artist || "Unknown"}
+                </Text>
+              </View>
+              <Text className="text-gray-500">{item.duration}</Text>
             </View>
-            <Text className="text-gray-500">{item.duration}</Text>
-          </View>
-        </Link>
+          </Link>
         </View>
-
       </CardContent>
     </Card>
   );

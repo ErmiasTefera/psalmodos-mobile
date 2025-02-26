@@ -1,26 +1,27 @@
 const listOfMezmurs = [
   {
     id: "1",
-    artist: "ዘማሪ ዲያቆን አቤል መክብብ",
-    title: "ተመስገን",
+    artist: "የጥር 7 ወረብ",
+    title: "ነአምን",
     createdDate: "2021-09-01",
-    duration: "2:37",
+    duration: "5:54",
     isPlaying: false,
-    url: "https://traffic.megaphone.fm/FODL8281657475.mp3?updated=1673441802",
+    isLoading: false,
+    url: "https://nexifytechnology.com/ነአምን.m4a",
     lyrics: `
-    ለሁሉም ፀሐይ ቀን ምታወጣ
-ድሃን አትንቅም ገንዘብ ስላጣ
-ባይኖረው እንኳን ባንተ ይኖራል
-ቆርሰህ ስትሰጠው ተመስገን ይላል::`
+    ነአምን በአብ ወነአምን በወልድ ወነአምን በመንፈስ ቅዱስ/2/
+    አሐዱ ውእቱ አምላክ ፍፁም አሐዱ ውእቱ/2/
+    `
   },
   {
     id: "2",
     artist: "",
     title: "እሴብሕ ጸጋኪ",
     createdDate: "2021-09-01",
-    duration: "1:26",
+    duration: "6:39",
     isPlaying: false,
-    url: "https://api.spreaker.com/download/episode/43447400/letteraoreste.mp3",
+    isLoading: false,
+    url: "https://nexifytechnology.com/እሴብሕ ጸጋኪ.m4a",
     lyrics: `
 እሴብሕ ጸጋኪ ኦ እግዝእትየ ማርያም
 ዕጽ ልምልምት ወፍሬ ጥዕምት /3/

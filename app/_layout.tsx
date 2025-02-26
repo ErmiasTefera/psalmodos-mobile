@@ -14,7 +14,8 @@ import TrackPlayer, { Capability } from "react-native-track-player";
 import { RNTPService } from "../services/track-player.service";
 
 import { PortalHost } from "@rn-primitives/portal";
-import { Appearance, useColorScheme } from "react-native";
+import { Appearance, Text, useColorScheme, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -60,17 +61,28 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen
-          name="(tabs)"
-          options={{ headerShown: false, title: "" }}
-        />
-        <Stack.Screen name="mezmur-list" options={{ title: "Mezmurs" }} />
-        <Stack.Screen name="mezmur-detail" />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-      <PortalHost />
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Stack>
+          <Stack.Screen
+            name="(tabs)"
+            options={{ headerShown: false, title: "" }}
+          />
+          <Stack.Screen
+            name="mezmur-detail"
+            options={{
+              orientation: "portrait",
+              presentation: "card",
+              gestureEnabled: true,
+              gestureDirection: "vertical",
+              animationDuration: 400,
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
+        <PortalHost />
+      </GestureHandlerRootView>
     </ThemeProvider>
   );
 }
