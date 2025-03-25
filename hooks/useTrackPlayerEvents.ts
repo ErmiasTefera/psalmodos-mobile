@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { useTrackPlayerEvents, Event, Track } from "react-native-track-player";
+import { TrackObject } from "~/models/common.model";
 
-const useCurrentTrack = () => {
-  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
+export const useCurrentTrack = () => {
+  const [currentTrack, setCurrentTrack] = useState<TrackObject | null>(null);
 
-  useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event: { index: number, track: Track}) => {
-    setCurrentTrack(event.track);
+  useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async (event: any) => {
+    setCurrentTrack({
+      ...event.track,
+      id: event.track.id,
+    });
   });
 
   return currentTrack;
 };
-
-export default useCurrentTrack;

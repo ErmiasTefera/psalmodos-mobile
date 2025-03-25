@@ -72,13 +72,13 @@ const PlayerControls = ({iconSize = 32, playButtonClass = 'w-16 h-16', container
   };
 
   const PlaybackIcon = () => {
-    if (playBackState.state === State.Playing) {
-      return <Pause size={iconSize} color="white" />;
-    } else if (playBackState.state === State.Paused) {
-      return <Play size={iconSize} color="white" />;
-    } else {
-      return <ActivityIndicator size={loaderSize} color="white" />;
+    if (playBackState.state === State.Buffering || playBackState.state === State.Loading) {
+      return <ActivityIndicator size='small' color="white" />;
     }
+    if (playBackState.state === State.Playing) {
+      return <Pause color={"white"} />;
+    }
+    return <Play color={"white"} fill={"#333"} />;
   };
 
   return (

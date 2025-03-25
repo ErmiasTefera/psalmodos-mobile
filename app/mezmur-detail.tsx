@@ -5,17 +5,13 @@ import { Text } from "~/components/ui/text";
 import MusicPlayer from "../components/player";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import listOfMezmurs from "~/assets/data";
 import TrackPlayer, {
-  State,
-  usePlaybackState,
 } from "react-native-track-player";
-import useCurrentTrack from "~/hooks/useTrackPlayerEvents";
+import { useCurrentTrack } from "~/hooks/useTrackPlayerEvents";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
-import { colors, fontSize, screenPadding } from "@/constants/tokens";
-import { defaultStyles, utilsStyles } from "@/styles";
-import { ChevronLeft, Music } from "lucide-react-native";
+import { fontSize, screenPadding } from "@/constants/tokens";
+import { defaultStyles } from "@/styles";
+import useMezmurStore from "~/store/mezmur.store";
 
 export default function MezmurDetail() {
   const { id, title } = useLocalSearchParams();
@@ -23,6 +19,7 @@ export default function MezmurDetail() {
   const [mezmur, setMezmurDetail] = useState<any>({});
   const currentTrack = useCurrentTrack();
   const { top } = useSafeAreaInsets();
+  const { currentCategoryMezmurs } = useMezmurStore();
 
   useEffect(() => {
     if (title) {
@@ -35,18 +32,18 @@ export default function MezmurDetail() {
 
   useEffect(() => {
     TrackPlayer.getActiveTrackIndex().then((trackIndex) => {
-      listOfMezmurs.find((mezmur, mezmurItemIndex) => {
+      currentCategoryMezmurs.find((mezmur, mezmurItemIndex) => {
         if (mezmurItemIndex === trackIndex) {
           setMezmurDetail(mezmur);
-          navigation.setOptions({ title: mezmur.title });
+          navigation.setOptions({ title: currentTrack?.title });
           return mezmur;
         }
       });
     });
   }, [currentTrack]);
 
-  const getMezmurDetail = async () => {
-    listOfMezmurs.find((mezmur, mezmurItemIndex) => {
+  const getMezmurDetail = () => {
+    currentCategoryMezmurs.find((mezmur) => {
       if (mezmur.id === id) {
         setMezmurDetail(mezmur);
         return mezmur;
@@ -56,9 +53,8 @@ export default function MezmurDetail() {
 
   const setCurrentMezmur = async () => {
     if (mezmur) {
-      const currentItemIndex = listOfMezmurs.findIndex(
-        (item) => item.id === mezmur.id
-      );
+      const currentItemIndex = currentCategoryMezmurs.findIndex(
+        (item) => item.id === mezmur.id );
       // if the current track is not the same as the current item
       const currentTrackIndex = await TrackPlayer.getActiveTrackIndex();
       if (currentTrackIndex !== currentItemIndex) {

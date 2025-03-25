@@ -8,7 +8,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import TrackPlayer, { Capability } from "react-native-track-player";
 import { RNTPService } from "../services/track-player.service";
@@ -16,6 +16,8 @@ import { RNTPService } from "../services/track-player.service";
 import { PortalHost } from "@rn-primitives/portal";
 import { Appearance, Text, useColorScheme, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import useCategoryStore from "@store/category.store";
+import useMezmurStore from "~/store/mezmur.store";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -27,6 +29,10 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+
+  const {isLoadingCategories, fetchCategories} = useCategoryStore();
+
+  const {isLoadingMezmurs, fetchMezmurs} = useMezmurStore();
 
   const setupPlayer = async () => {
     try {
@@ -46,14 +52,16 @@ export default function RootLayout() {
 
   useEffect(() => {
     setupPlayer();
+    fetchCategories();
+    fetchMezmurs(''); // fetch all mezmurs
   }, []);
 
   useEffect(() => {
     Appearance.setColorScheme("light");
-    if (loaded) {
+    if (loaded && !isLoadingCategories && !isLoadingMezmurs) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded, isLoadingCategories, isLoadingMezmurs]);
 
   if (!loaded) {
     return null;

@@ -1,19 +1,26 @@
 import { FlatList, View } from "react-native";
 import React, { useEffect } from "react";
 import MezmurListItem from "~/components/MezmurListItem";
-import TrackPlayer, {
-  State,
-  usePlaybackState,
-} from "react-native-track-player";
-import listOfMezmurs from "~/assets/data";
+import TrackPlayer, { usePlaybackState } from "react-native-track-player";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useNavigationSearch } from "~/hooks/useNavigationSearch";
+import useMezmurStore from "~/store/mezmur.store";
+import { useNavigationState } from "@react-navigation/native";
+import useCategoryStore from "~/store/category.store";
 
 export default function MezmurList() {
-  const { title } = useLocalSearchParams();
+  const { title, id } = useLocalSearchParams();
   const navigation = useNavigation();
-  const [mezmurs, setMezmurs] = React.useState(listOfMezmurs);
   const playBackState = usePlaybackState();
+  const state = useNavigationState((state) => state);
+
+  const {
+    handlePlaybackStateChange,
+    filterMezmursByCategory,
+    currentCategoryMezmurs,
+    mezmurList,
+  } = useMezmurStore();
+  const { selectedCategory } = useCategoryStore();
 
   const search = useNavigationSearch({
     searchBarOptions: {
@@ -21,63 +28,16 @@ export default function MezmurList() {
     },
   });
 
-  const setPlayerTracks = async () => {
-    try {
-      const tracks = await TrackPlayer.getQueue();
-      mezmurs.forEach((mezmur, index) => {
-        const track = {
-          id: mezmur.id,
-          url: mezmur.url,
-          title: mezmur.title,
-          artist: mezmur.artist,
-        };
-        // if the track is already in the queue skip adding it
-        if (tracks.find((track, trackIndex) => trackIndex === index)) {
-          return;
-        }
-        // add the track to the queue
-        TrackPlayer.add(track);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const togglePlay = async (item: any) => {
-    const currentItemIndex = mezmurs.findIndex(
-      (mezmur) => mezmur.id === item.id
-    );
-    const currentTrackIndex = await TrackPlayer.getActiveTrackIndex();
-
-    if (currentTrackIndex === currentItemIndex) {
-      if (playBackState.state === State.Playing) {
-        await TrackPlayer.pause();
-      } else {
-        await TrackPlayer.play();
-      }
-    } else {
-      await TrackPlayer.skip(currentItemIndex);
-      await TrackPlayer.play();
-    }
- 
-    setMezmurs((prevMezmurs) =>
-      prevMezmurs.map((mezmur) => {
-        // if the mezmur is the one we want to toggle
-        if (mezmur.id === item.id) {
-          mezmur.isPlaying = !mezmur.isPlaying;
-        } else {
-          // if the mezmur is not the one we want to toggle
-          mezmur.isPlaying = false;
-        }
-
-        return mezmur;
-      })
-    );
-  };
-
   useEffect(() => {
-    setPlayerTracks();
-  }, []);
+    const currentRoute = state.routes[state.index]?.name;
+    if (currentRoute === "playlist") {
+      // get all mezmurs
+      filterMezmursByCategory("");
+    } else {
+      // filter by current category
+      filterMezmursByCategory(selectedCategory?.id || "");
+    }
+  }, [state]);
 
   useEffect(() => {
     if (title) {
@@ -87,14 +47,7 @@ export default function MezmurList() {
 
   useEffect(() => {
     TrackPlayer.getActiveTrackIndex().then((index) => {
-      setMezmurs((prevMezmurs) => {
-        return prevMezmurs.map((mezmur, i) => {
-          mezmur.isPlaying =
-            i === index && playBackState.state === State.Playing;
-          mezmur.isLoading = i === index && (playBackState.state === State.Buffering || playBackState.state === State.Loading);
-          return mezmur;
-        });
-      });
+      handlePlaybackStateChange(playBackState, index);
     });
   }, [playBackState]);
 
@@ -102,19 +55,18 @@ export default function MezmurList() {
     <View className="flex-1">
       <FlatList
         contentInsetAdjustmentBehavior="automatic"
-        data={mezmurs}
-        renderItem={({ item }) => (
-          <MezmurListItem item={item} togglePlay={togglePlay} key={item.id} />
-        )}
+        data={currentCategoryMezmurs}
+        renderItem={({ item }) => <MezmurListItem item={item} key={item.id} />}
       />
 
-      <View style={{
-        		position: 'absolute',
-            left: 8,
-            right: 8,
-            bottom: 78,
-      }}>
-      </View>
+      <View
+        style={{
+          position: "absolute",
+          left: 8,
+          right: 8,
+          bottom: 78,
+        }}
+      ></View>
     </View>
   );
 }
