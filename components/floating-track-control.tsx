@@ -6,6 +6,7 @@ import TrackPlayer from "react-native-track-player";
 import { useNavigation } from "expo-router";
 import { useCurrentTrack } from "~/hooks/useTrackPlayerEvents";
 import PlayerControls from "~/components/PlayerControls";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const FloatingTrackControl = () => {
   const [trackTitle, setTrackTitle] = useState<string | undefined>();
@@ -14,6 +15,7 @@ const FloatingTrackControl = () => {
   const currentTrack = useCurrentTrack();
 
   const navigation = useNavigation();
+  const { top, bottom } = useSafeAreaInsets();
 
   const setupPlayer = async () => {
     try {
@@ -42,7 +44,7 @@ const FloatingTrackControl = () => {
 
   // Navigate to Track Details
   const goToTrackDetails = () => {
-    navigation.navigate("mezmur-detail", { id: trackId, title: trackTitle });
+    navigation.navigate('mezmur-detail', { id: trackId, title: trackTitle });
   };
 
   return (
@@ -51,7 +53,7 @@ const FloatingTrackControl = () => {
       position: 'absolute',
       left: 8,
       right: 8,
-      bottom: 88,
+      bottom: 60,
     }}>
       <View className="flex-row items-center bg-gray-200 shadow-md rounded-xl p-4 w-full">
         {/* Music Icon using Lucide */}

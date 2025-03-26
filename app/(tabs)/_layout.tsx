@@ -31,30 +31,13 @@ export default function TabLayout() {
         }}
       >
         <Tabs.Screen
-          name="mezmur_list"
+          name="mezmurs"
           options={{
             title: "Home",
             headerShown: true,
             tabBarIcon: ({ color }) => (
               <IconSymbol size={28} name="house.fill" color={color} />
             ),
-          }}
-        />
-        <Tabs.Screen
-          name="(mezmur)"
-          options={{
-            title: "Home",
-            href: null,
-            tabBarIcon: ({ color }) => (
-              <IconSymbol size={28} name="house.fill" color={color} />
-            ),
-          }}
-        />
-        {/* dummy screen defined to hide index tab */}
-        <Tabs.Screen
-          name="index"
-          options={{
-            href: null,
           }}
         />
         <Tabs.Screen

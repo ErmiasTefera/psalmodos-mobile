@@ -13,29 +13,25 @@ import { fontSize, screenPadding } from "@/constants/tokens";
 import { defaultStyles } from "@/styles";
 import useMezmurStore from "~/store/mezmur.store";
 
-export default function MezmurDetail() {
+export default function MezmurDetailScreen() {
   const { id, title } = useLocalSearchParams();
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const [mezmur, setMezmurDetail] = useState<any>({});
   const currentTrack = useCurrentTrack();
   const { top } = useSafeAreaInsets();
   const { currentCategoryMezmurs } = useMezmurStore();
 
   useEffect(() => {
-    if (title) {
-      navigation.setOptions({ title });
-    }
     if (id) {
       getMezmurDetail();
     }
-  }, [id, title, navigation]);
+  }, [id, title]);
 
   useEffect(() => {
     TrackPlayer.getActiveTrackIndex().then((trackIndex) => {
       currentCategoryMezmurs.find((mezmur, mezmurItemIndex) => {
         if (mezmurItemIndex === trackIndex) {
           setMezmurDetail(mezmur);
-          navigation.setOptions({ title: currentTrack?.title });
           return mezmur;
         }
       });
@@ -57,7 +53,8 @@ export default function MezmurDetail() {
         (item) => item.id === mezmur.id );
       // if the current track is not the same as the current item
       const currentTrackIndex = await TrackPlayer.getActiveTrackIndex();
-      if (currentTrackIndex !== currentItemIndex) {
+      if (currentItemIndex !== -1 && currentTrackIndex !== currentItemIndex) {
+        console.log("currentItemIndex", currentItemIndex);
         await TrackPlayer.skip(currentItemIndex);
         await TrackPlayer.play();
       }

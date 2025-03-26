@@ -5,13 +5,11 @@ import TrackPlayer, { usePlaybackState } from "react-native-track-player";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useNavigationSearch } from "~/hooks/useNavigationSearch";
 import useMezmurStore from "~/store/mezmur.store";
-import { useNavigationState } from "@react-navigation/native";
 
 export default function DownloadsScreen() {
   const { title, id } = useLocalSearchParams();
   const navigation = useNavigation();
   const playBackState = usePlaybackState();
-  const state = useNavigationState((state) => state);
 
   const {
     handlePlaybackStateChange,

@@ -55,12 +55,10 @@ const useMezmurStore = create<MezmurStore>()((set) => ({
       data.forEach((mezmur) => {
         const localMezmur = localMezmurs.find( (localMezmur) => localMezmur.id === mezmur.id );
         if (localMezmur) {
-          console.log("Local mezmur found", localMezmur); 
           mezmur.isDownloaded = localMezmur.isDownloaded ? localMezmur.isDownloaded : false;
         }
       });
       mezmurs = data;
-      console.log("Fetched mezmurs", mezmurs);
     }
 
     mezmurs.forEach((mezmur) => {
@@ -185,7 +183,6 @@ const setTracksQueue = async (mezmurs: Mezmur[]) => {
       if (existingTrack) {
         return;
       }
-      console.log("Adding track to queue", trackInfo);
       // add the track to the queue
       TrackPlayer.add(trackInfo);
     });

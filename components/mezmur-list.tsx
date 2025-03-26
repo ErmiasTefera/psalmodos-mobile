@@ -5,14 +5,14 @@ import TrackPlayer, { usePlaybackState } from "react-native-track-player";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useNavigationSearch } from "~/hooks/useNavigationSearch";
 import useMezmurStore from "~/store/mezmur.store";
-import { useNavigationState } from "@react-navigation/native";
 import useCategoryStore from "~/store/category.store";
+
+
 
 export default function MezmurList() {
   const { title, id } = useLocalSearchParams();
   const navigation = useNavigation();
   const playBackState = usePlaybackState();
-  const state = useNavigationState((state) => state);
 
   const {
     handlePlaybackStateChange,
@@ -29,15 +29,8 @@ export default function MezmurList() {
   });
 
   useEffect(() => {
-    const currentRoute = state.routes[state.index]?.name;
-    if (currentRoute === "playlist") {
-      // get all mezmurs
-      filterMezmursByCategory("");
-    } else {
-      // filter by current category
-      filterMezmursByCategory(selectedCategory?.id || "");
-    }
-  }, [state]);
+    filterMezmursByCategory("");
+  }, []);
 
   useEffect(() => {
     if (title) {
