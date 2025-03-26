@@ -62,6 +62,7 @@ const FloatingTrackControl = () => {
         {/* Track Name */}
         <Text className="text-gray-800 text-lg ml-3 flex-1">{trackTitle}</Text> 
 
+
         {/* Controls */}
         <PlayerControls iconSize={24} playButtonClass="w-10 h-10" containerClass="gap-4" loaderSize="small"/>
       </View>

@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import { Mezmur } from "~/models/mezmur.model";
+import * as FileSystem from "expo-file-system";
 
 const SUPABASE_URL = "https://mhkdkdydnxneetwblrbt.supabase.co";
 const SUPABASE_KEY =
@@ -32,6 +34,9 @@ export const getMezmursByCategory = async (categoryId: string = "") => {
 };
 
 
-export const getFullFilePath = (filePath: string) => {
-	return `${SUPABASE_URL}/storage/v1/object/public/${filePath}`;
+export const getFullFilePath = (mezmur: Mezmur) => {
+  if (mezmur.isDownloaded) {
+    return `${FileSystem.documentDirectory}${mezmur.audio_file_name}`;
+  }
+	return `${SUPABASE_URL}/storage/v1/object/public/${mezmur.audio_file_path}`;
 }

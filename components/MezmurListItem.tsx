@@ -11,11 +11,22 @@ import TrackPlayer, {
 import { formatDuration } from "~/lib/utils";
 import useMezmurStore from "~/store/mezmur.store";
 import { useCurrentTrack } from "~/hooks/useTrackPlayerEvents";
+import Feather from "@expo/vector-icons/Feather";
 
-export default function MezmurListItem({ item }: { item: any }) {
+export default function MezmurListItem({
+  item,
+  showDownload,
+}: {
+  item: any;
+  showDownload?: boolean;
+}) {
   const playBackState = usePlaybackState();
   const currentTrack = useCurrentTrack();
-  const { mezmurList, togglePlayState } = useMezmurStore();
+  const { mezmurList, togglePlayState, saveMezmurFile } = useMezmurStore();
+  const [downloadState, setDownloadState] = React.useState({
+    isDownloading: false,
+    isDownloaded: false,
+  });
 
   const PlaybackIcon = () => {
     if (currentTrack && currentTrack.id === item.id) {
@@ -52,6 +63,17 @@ export default function MezmurListItem({ item }: { item: any }) {
     togglePlayState(item);
   };
 
+  const handleDownload = () => {
+    setDownloadState({ isDownloading: true, isDownloaded: false });
+    saveMezmurFile(item.id, item)
+      .then(() => {
+        setDownloadState({ isDownloading: false, isDownloaded: true });
+      })
+      .catch(() => {
+        setDownloadState({ isDownloading: false, isDownloaded: false });
+      });
+  };
+
   return (
     <Card className="w-full mt-2">
       <CardContent className="flex flex-row gap-3 p-3 items-center w-full">
@@ -63,24 +85,28 @@ export default function MezmurListItem({ item }: { item: any }) {
         </TouchableOpacity>
 
         <View className="flex flex-1">
-          <Link
-            href={{
-              pathname: "/mezmur-detail",
-              params: { id: item.id, title: item.title },
-            }}
-          >
-            <View className="flex flex-row justify-between w-full items-center">
+          <View className="flex flex-row justify-between w-full items-center">
+            <Link
+              className="flex-1"
+              href={{
+                pathname: "/mezmur-detail",
+                params: { id: item.id, title: item.title },
+              }}
+            >
               <View className="flex gap-1">
                 <Text className="font-bold">{item.title}</Text>
                 <Text className="text-gray-500">
-                  {item.artist || "Unknown"}
+                  {formatDuration(item.duration)}
                 </Text>
               </View>
-              <Text className="text-gray-500">
-                {formatDuration(item.duration)}
-              </Text>
-            </View>
-          </Link>
+            </Link>
+            {showDownload && !item.isDownloaded && (
+              <TouchableOpacity onPress={() => handleDownload()}>
+                {!downloadState.isDownloaded && !downloadState.isDownloading && <Feather name="download-cloud" size={22} color="gray" />}
+                {downloadState.isDownloading && <ActivityIndicator size="small" color="gray" />}
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
       </CardContent>
     </Card>

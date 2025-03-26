@@ -30,6 +30,8 @@ const PlayerControls = ({iconSize = 32, playButtonClass = 'w-16 h-16', container
   }, []);
 
   const getTrackData = async () => {
+    TrackPlayer.getQueue().then((tracks) => {
+    });
     let currentTrackIndex = await TrackPlayer.getActiveTrackIndex();
     if (currentTrackIndex == null) {
       return;

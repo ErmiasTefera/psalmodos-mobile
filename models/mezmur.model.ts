@@ -12,4 +12,5 @@ export interface Mezmur extends BaseModel {
     lyrics: string;
     isPlaying: boolean;
     isLoading: boolean;
+    isDownloaded: boolean;
 }

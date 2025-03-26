@@ -8,6 +8,7 @@ import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import FloatingTrackControl from "~/components/floating-track-control";
+import Feather from "@expo/vector-icons/Feather";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -30,21 +31,39 @@ export default function TabLayout() {
         }}
       >
         <Tabs.Screen
-          name="(mezmur)"
+          name="mezmur_list"
           options={{
             title: "Home",
+            headerShown: true,
             tabBarIcon: ({ color }) => (
               <IconSymbol size={28} name="house.fill" color={color} />
             ),
           }}
         />
         <Tabs.Screen
-          name="playlist"
+          name="(mezmur)"
           options={{
-            title: "All Mezmurs",
+            title: "Home",
+            href: null,
+            tabBarIcon: ({ color }) => (
+              <IconSymbol size={28} name="house.fill" color={color} />
+            ),
+          }}
+        />
+        {/* dummy screen defined to hide index tab */}
+        <Tabs.Screen
+          name="index"
+          options={{
+            href: null,
+          }}
+        />
+        <Tabs.Screen
+          name="downloads"
+          options={{
+            title: "Downloads",
             headerShown: true,
             tabBarIcon: ({ color }) => (
-              <IconSymbol size={28} name="paperplane.fill" color={color} />
+              <Feather name="download-cloud" size={28} color={color} />
             ),
           }}
         />
