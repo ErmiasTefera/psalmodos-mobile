@@ -1,7 +1,7 @@
 import { ActivityIndicator, TouchableOpacity, View } from "react-native";
-import { Text } from "~/components/ui/text";
+import { Text } from "@/components/ui/text";
 import React, { useEffect } from "react";
-import { Card, CardContent } from "~/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Play, Pause } from "lucide-react-native";
 import { Link } from "expo-router";
 import TrackPlayer, {
@@ -9,8 +9,8 @@ import TrackPlayer, {
   usePlaybackState,
 } from "react-native-track-player";
 import { formatDuration } from "~/lib/utils";
-import useMezmurStore from "~/store/mezmur.store";
-import { useCurrentTrack } from "~/hooks/useTrackPlayerEvents";
+import useMezmurStore from "@/store/mezmur.store";
+import { useCurrentTrack } from "@/hooks/useTrackPlayerEvents";
 import Feather from "@expo/vector-icons/Feather";
 
 export default function MezmurListItem({

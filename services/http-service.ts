@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { Mezmur } from "~/models/mezmur.model";
+import { Mezmur } from "@/models/mezmur.model";
 import * as FileSystem from "expo-file-system";
 
 const SUPABASE_URL = "https://mhkdkdydnxneetwblrbt.supabase.co";

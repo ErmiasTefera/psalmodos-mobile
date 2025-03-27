@@ -10,7 +10,7 @@ import TrackPlayer, {
   usePlaybackState,
   State,
 } from "react-native-track-player";
-import mezmurs from "~/assets/data";
+import mezmurs from "@/assets/data";
 
 const PlayerControls = ({iconSize = 32, playButtonClass = 'w-16 h-16', containerClass = 'justify-between w-1/2', loaderSize="large"}) => {
   const mezmursCount = mezmurs.length;

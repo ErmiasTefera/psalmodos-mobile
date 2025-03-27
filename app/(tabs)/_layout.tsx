@@ -7,7 +7,7 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import FloatingTrackControl from "~/components/floating-track-control";
+import FloatingTrackControl from "@/components/floating-track-control";
 import Feather from "@expo/vector-icons/Feather";
 
 export default function TabLayout() {

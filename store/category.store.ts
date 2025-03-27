@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { create } from "zustand";
-import { Category } from "~/models/category.model";
-import { getCategories } from "~/services/http-service";
+import { Category } from "@/models/category.model";
+import { getCategories } from "@/services/http-service";
 
 type CategoryStore = {
   isLoadingCategories: boolean;

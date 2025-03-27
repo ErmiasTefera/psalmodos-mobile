@@ -1,11 +1,11 @@
 import { FlatList, View } from "react-native";
 import React, { useEffect } from "react";
-import MezmurListItem from "~/components/MezmurListItem";
+import MezmurListItem from "@/components/MezmurListItem";
 import TrackPlayer, { usePlaybackState } from "react-native-track-player";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useNavigationSearch } from "~/hooks/useNavigationSearch";
-import useMezmurStore from "~/store/mezmur.store";
-import useCategoryStore from "~/store/category.store";
+import { useNavigationSearch } from "@/hooks/useNavigationSearch";
+import useMezmurStore from "@/store/mezmur.store";
+import useCategoryStore from "@/store/category.store";
 
 
 

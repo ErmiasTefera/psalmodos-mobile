@@ -1,17 +1,17 @@
 import { useLocalSearchParams } from "expo-router";
 
 import { ScrollView, View, StyleSheet } from "react-native";
-import { Text } from "~/components/ui/text";
+import { Text } from "@/components/ui/text";
 import MusicPlayer from "../components/player";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import TrackPlayer, {
 } from "react-native-track-player";
-import { useCurrentTrack } from "~/hooks/useTrackPlayerEvents";
+import { useCurrentTrack } from "@/hooks/useTrackPlayerEvents";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { fontSize, screenPadding } from "@/constants/tokens";
 import { defaultStyles } from "@/styles";
-import useMezmurStore from "~/store/mezmur.store";
+import useMezmurStore from "@/store/mezmur.store";
 
 export default function MezmurDetailScreen() {
   const { id, title } = useLocalSearchParams();

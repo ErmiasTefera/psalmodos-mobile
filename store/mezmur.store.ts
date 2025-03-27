@@ -1,14 +1,14 @@
 import TrackPlayer, { PlaybackState, State } from "react-native-track-player";
 import { create } from "zustand";
-import { Mezmur } from "~/models/mezmur.model";
-import { getFullFilePath, getMezmursByCategory } from "~/services/http-service";
+import { Mezmur } from "@/models/mezmur.model";
+import { getFullFilePath, getMezmursByCategory } from "@/services/http-service";
 import {
   getAllLocalMezmurs,
   getMezmur,
   removeMezmur,
   saveMezmur,
   saveMezmurFile,
-} from "~/services/storage.service";
+} from "@/services/storage.service";
 import * as FileSystem from "expo-file-system";
 
 type MezmurStore = {

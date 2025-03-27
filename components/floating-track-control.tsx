@@ -4,8 +4,8 @@ import { Music } from "lucide-react-native";
 
 import TrackPlayer from "react-native-track-player";
 import { useNavigation } from "expo-router";
-import { useCurrentTrack } from "~/hooks/useTrackPlayerEvents";
-import PlayerControls from "~/components/PlayerControls";
+import { useCurrentTrack } from "@/hooks/useTrackPlayerEvents";
+import PlayerControls from "@/components/PlayerControls";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const FloatingTrackControl = () => {

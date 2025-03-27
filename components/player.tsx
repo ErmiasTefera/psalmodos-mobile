@@ -1,8 +1,8 @@
 import React from "react";
 import { View } from "react-native";
-import { PlayerProgressBar } from "~/components/PlayerProgressbar";
-import PlayerControls from "~/components/PlayerControls";
-import { PlayerVolumeBar } from "~/components/PlayerVolumeBar";
+import { PlayerProgressBar } from "@/components/PlayerProgressbar";
+import PlayerControls from "@/components/PlayerControls";
+import { PlayerVolumeBar } from "@/components/PlayerVolumeBar";
 
 const MusicPlayer = () => {
   return (

@@ -17,7 +17,7 @@ import { PortalHost } from "@rn-primitives/portal";
 import { Appearance, Text, useColorScheme, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import useCategoryStore from "@store/category.store";
-import useMezmurStore from "~/store/mezmur.store";
+import useMezmurStore from "@/store/mezmur.store";
 import { NavigationContainer } from '@react-navigation/native';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
