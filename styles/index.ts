@@ -12,7 +12,6 @@ export const defaultStyles = Platform.OS === "ios" ? StyleSheet.create({
 	},
 }) : StyleSheet.create({
 	container: {
-		top: 40,
 		paddingTop:15,
 		flex: 1,
 		backgroundColor: colors.background,

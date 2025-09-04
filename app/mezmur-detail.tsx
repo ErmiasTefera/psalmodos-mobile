@@ -1,9 +1,8 @@
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 
-import { ScrollView, View, StyleSheet } from "react-native";
+import { ScrollView, View, StyleSheet, Platform } from "react-native";
 import { Text } from "@/components/ui/text";
 import MusicPlayer from "../components/player";
-import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import TrackPlayer, {
 } from "react-native-track-player";
@@ -15,7 +14,7 @@ import useMezmurStore from "@/store/mezmur.store";
 
 export default function MezmurDetailScreen() {
   const { id, title } = useLocalSearchParams();
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
   const [mezmur, setMezmurDetail] = useState<any>({});
   const currentTrack = useCurrentTrack();
   const { top } = useSafeAreaInsets();
@@ -25,6 +24,7 @@ export default function MezmurDetailScreen() {
     if (id) {
       getMezmurDetail();
     }
+    navigation.setOptions({ title: title });
   }, [id, title]);
 
   useEffect(() => {
@@ -54,7 +54,6 @@ export default function MezmurDetailScreen() {
       // if the current track is not the same as the current item
       const currentTrackIndex = await TrackPlayer.getActiveTrackIndex();
       if (currentItemIndex !== -1 && currentTrackIndex !== currentItemIndex) {
-        console.log("currentItemIndex", currentItemIndex);
         await TrackPlayer.skip(currentItemIndex);
         await TrackPlayer.play();
       }
@@ -68,12 +67,12 @@ export default function MezmurDetailScreen() {
   return (
     <View className="flex-1">
       <View style={styles.overlayContainer}>
-        <DismissPlayerSymbol />
+        {Platform.OS === "ios" && <DismissPlayerSymbol />}
         <View
           className="flex-1"
-          style={{ marginTop: top + 20, marginBottom: top }}
+          style={Platform.OS === "ios" ? { marginTop: top + 20, marginBottom: top } : {}}
         >
-          <Text className="text-gray-800 text-2xl underline">{mezmur?.title}</Text>
+          {Platform.OS === "ios" && <Text className="text-gray-800 text-2xl underline">{mezmur?.title}</Text>}
  
           <View className="flex-1 border-1">
           <ScrollView>

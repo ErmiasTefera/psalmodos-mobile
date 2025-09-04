@@ -14,7 +14,7 @@ import TrackPlayer, { Capability } from "react-native-track-player";
 import { RNTPService } from "../services/track-player.service";
 
 import { PortalHost } from "@rn-primitives/portal";
-import { Appearance, Text, useColorScheme, View } from "react-native";
+import { Appearance, Platform, Text, useColorScheme, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import useCategoryStore from "@store/category.store";
 import useMezmurStore from "@/store/mezmur.store";
@@ -85,7 +85,7 @@ export default function RootLayout() {
               gestureEnabled: true,
               gestureDirection: "vertical",
               animationDuration: 400,
-              headerShown: false,
+              headerShown: Platform.OS !== "ios",
             }}
           />
           <Stack.Screen name="+not-found" />

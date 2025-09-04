@@ -6,7 +6,7 @@ import { PlayerVolumeBar } from "@/components/PlayerVolumeBar";
 
 const MusicPlayer = () => {
   return (
-    <View className="items-center pt-5 ">
+    <View className="items-center pt-5">
       {/* Track Progress Slider */}
       <PlayerProgressBar style={{ width: "100%" }} />
 

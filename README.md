@@ -1,50 +1,197 @@
-# Welcome to your Expo app 👋
+# Psalmodos Mobile 🎵
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native/Expo mobile application for streaming Ethiopian Orthodox Christian hymns (mezmurs). Built with cultural sensitivity and offline-first architecture to provide seamless access to traditional religious music.
 
-## Get started
+## Features ✨
 
-1. Install dependencies
+- **🎵 Music Streaming**: Professional audio playback with React Native Track Player
+- **📱 Cross-Platform**: Native iOS and Android apps built with Expo
+- **💾 Offline Support**: Download mezmurs for offline listening
+- **🎛️ Advanced Player**: Full-featured music player with controls, progress bar, and volume
+- **📖 Lyrics Display**: View lyrics while listening to hymns
+- **🏷️ Categories**: Browse mezmurs by categories and themes
+- **🔄 Background Playback**: Continue listening when app is backgrounded
+- **🎧 Lock Screen Controls**: Control playback from lock screen and notifications
 
+## Tech Stack 🛠️
+
+- **Framework**: Expo SDK 50 with React Native 0.73.6
+- **Navigation**: Expo Router with file-based routing
+- **State Management**: Zustand for lightweight state management
+- **Audio**: React Native Track Player for professional audio playback
+- **UI**: NativeWind (Tailwind CSS) with custom components
+- **Storage**: MMKV for high-performance local storage
+- **Backend**: Supabase for content management
+- **Build**: EAS Build for cross-platform deployment
+
+## Getting Started 🚀
+
+### Prerequisites
+
+- Node.js (latest LTS)
+- Expo CLI
+- iOS Simulator (for iOS development)
+- Android Studio (for Android development)
+- EAS CLI (for builds)
+
+### Installation
+
+1. Clone the repository
+   ```bash
+   git clone <repository-url>
+   cd psalmodos-mobile
+   ```
+
+2. Install dependencies
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. Start the development server
    ```bash
-    npx expo start
+   npm start
    ```
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### Development Commands
 
 ```bash
-npm run reset-project
+npm start          # Start Expo development server
+npm run android    # Run on Android emulator
+npm run ios        # Run on iOS simulator
+npm run web        # Run on web browser
+npm test           # Run tests
+npm run lint       # Lint code
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Project Structure 📁
 
-## Learn more
+```
+psalmodos-mobile/
+├── app/                    # Expo Router pages
+│   ├── (tabs)/            # Tab navigation screens
+│   ├── mezmur-detail.tsx  # Full-screen player
+│   └── _layout.tsx        # Root layout
+├── components/            # Reusable UI components
+│   ├── player.tsx         # Main music player
+│   ├── PlayerControls.tsx # Play/pause/skip controls
+│   ├── floating-track-control.tsx # Mini player
+│   └── ui/               # Design system components
+├── store/                # Zustand state management
+│   ├── mezmur.store.ts   # Music data & playback state
+│   └── category.store.ts # Category management
+├── services/             # Business logic
+│   ├── track-player.service.js # Audio playback
+│   ├── http-service.ts   # API communication
+│   └── storage.service.ts # Local data persistence
+├── models/               # TypeScript interfaces
+├── hooks/                # Custom React hooks
+└── memory-bank/          # Project documentation
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Architecture 🏗️
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Audio Playback
+- **Service-based**: Background audio handled by `track-player.service.js`
+- **Queue Management**: Tracks added to player queue via Zustand store
+- **State Sync**: Centralized state management across all player components
 
-## Join the community
+### Player Components
+```
+floating-track-control.tsx (Mini player)
+    ↓ navigates to
+mezmur-detail.tsx (Full-screen player with lyrics)
+    ↓ contains
+player.tsx (Player container)
+    ├── PlayerProgressbar.tsx
+    ├── PlayerControls.tsx
+    └── PlayerVolumeBar.tsx
+```
 
-Join our community of developers creating universal apps.
+### Data Flow
+```
+API/Storage → Zustand Store → Components → User Actions → Store Updates
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Key Features Implementation
+
+### Music Player
+- Professional audio controls (play, pause, skip, volume)
+- Progress bar with seek functionality
+- Background playback with lock screen controls
+- Queue management and track switching
+
+### Offline Support
+- Download mezmurs for offline listening
+- Local storage with MMKV for high performance
+- Automatic fallback to cached content when offline
+
+### User Interface
+- Modern, responsive design with NativeWind
+- Floating mini player that persists across screens
+- Full-screen player with lyrics display
+- Tab-based navigation for easy content discovery
+
+## Build & Deployment 📦
+
+### EAS Build Configuration
+
+The project uses EAS Build for cross-platform deployment:
+
+```bash
+# Install EAS CLI
+npm install -g @expo/eas-cli
+
+# Configure EAS
+eas build:configure
+
+# Build for development
+eas build --profile development
+
+# Build for preview
+eas build --profile preview
+
+# Build for production
+eas build --profile production
+```
+
+### Build Profiles
+
+- **Development**: Custom development builds with debugging
+- **Preview**: Internal distribution builds for testing
+- **Production**: App store ready builds
+
+## Contributing 🤝
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Cultural Considerations 🌍
+
+This app is designed with deep respect for Ethiopian Orthodox Christian traditions:
+
+- **Cultural Sensitivity**: UI and UX designed to honor religious context
+- **Accessibility**: Works for users of all technical skill levels
+- **Offline Priority**: Essential for areas with limited connectivity
+- **Performance**: Optimized for various device capabilities
+
+## License 📄
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments 🙏
+
+- Ethiopian Orthodox Church for preserving these beautiful hymns
+- React Native Track Player for excellent audio capabilities
+- Expo team for the amazing development platform
+- All contributors who help preserve this cultural heritage
+
+## Support 💬
+
+For support, email [your-email@example.com] or join our community discussions.
+
+---
+
+**Psalmodos Mobile** - Preserving Ethiopian Orthodox musical heritage through modern technology.
