@@ -42,7 +42,10 @@
             "kotlinVersion": "1.7.22"
           }
         }
-      ]
+      ],
+      "react-native-track-player",
+      "react-native-mmkv",
+      "expo-dev-client"
     ],
     "experiments": {
       "typedRoutes": true

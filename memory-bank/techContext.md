@@ -3,24 +3,25 @@
 ## Technology Stack
 
 ### Core Framework
-- **Expo SDK 50**: Development platform and build system
-- **React Native 0.73.6**: Cross-platform mobile framework
-- **TypeScript**: Type-safe JavaScript development
-- **Expo Router**: File-based navigation system
+- **Expo SDK 53**: Development platform and build system
+- **React Native 0.79.5**: Cross-platform mobile framework
+- **React 19.0.0**: Latest React version
+- **TypeScript 5.8.3**: Type-safe JavaScript development
+- **Expo Router 5.1.5**: File-based navigation system
 
 ### Audio & Media
-- **React Native Track Player 4.1.1**: Professional audio playback
-- **Expo File System**: Local file management for downloads
-- **React Native MMKV**: High-performance local storage
+- **React Native Track Player 4.1.2**: Professional audio playback
+- **Expo File System 18.1.11**: Local file management for downloads
+- **React Native MMKV 2.12.2**: High-performance local storage
 
 ### UI & Styling
 - **NativeWind 4.1.23**: Tailwind CSS for React Native
-- **Lucide React Native**: Icon library
-- **React Native Reanimated**: Smooth animations
-- **React Native Gesture Handler**: Touch interactions
+- **Lucide React Native 0.469.0**: Icon library
+- **React Native Reanimated 3.17.5**: Smooth animations
+- **React Native Gesture Handler 2.24.0**: Touch interactions
 
 ### State Management
-- **Zustand 5.0.3**: Lightweight state management
+- **Zustand 5.0.8**: Lightweight state management
 - **React Hooks**: Component state and lifecycle management
 
 ### Backend & Storage
@@ -45,18 +46,20 @@
 
 ### Installation
 ```bash
-npm install
+pnpm install
 npx expo install
 ```
 
 ### Development Commands
 ```bash
-npm start          # Start Expo development server
-npm run android    # Run on Android
-npm run ios        # Run on iOS
-npm run web        # Run on web
-npm test           # Run tests
-npm run lint       # Lint code
+pnpm start         # Start Expo development server
+pnpm run android   # Run on Android
+pnpm run ios       # Run on iOS
+pnpm run web       # Run on web
+pnpm test          # Run tests
+pnpm run lint      # Lint code
+pnpm add <package> # Add new dependency
+pnpm remove <package> # Remove dependency
 ```
 
 ### Build Configuration

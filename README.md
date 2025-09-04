@@ -15,7 +15,7 @@ A React Native/Expo mobile application for streaming Ethiopian Orthodox Christia
 
 ## Tech Stack 🛠️
 
-- **Framework**: Expo SDK 50 with React Native 0.73.6
+- **Framework**: Expo SDK 53 with React Native 0.79.5
 - **Navigation**: Expo Router with file-based routing
 - **State Management**: Zustand for lightweight state management
 - **Audio**: React Native Track Player for professional audio playback
@@ -29,6 +29,7 @@ A React Native/Expo mobile application for streaming Ethiopian Orthodox Christia
 ### Prerequisites
 
 - Node.js (latest LTS)
+- pnpm (package manager)
 - Expo CLI
 - iOS Simulator (for iOS development)
 - Android Studio (for Android development)
@@ -44,23 +45,25 @@ A React Native/Expo mobile application for streaming Ethiopian Orthodox Christia
 
 2. Install dependencies
    ```bash
-   npm install
+   pnpm install
    ```
 
 3. Start the development server
    ```bash
-   npm start
+   pnpm start
    ```
 
 ### Development Commands
 
 ```bash
-npm start          # Start Expo development server
-npm run android    # Run on Android emulator
-npm run ios        # Run on iOS simulator
-npm run web        # Run on web browser
-npm test           # Run tests
-npm run lint       # Lint code
+pnpm start         # Start Expo development server
+pnpm run android   # Run on Android emulator
+pnpm run ios       # Run on iOS simulator
+pnpm run web       # Run on web browser
+pnpm test          # Run tests
+pnpm run lint      # Lint code
+pnpm add <package> # Add new dependency
+pnpm remove <package> # Remove dependency
 ```
 
 ## Project Structure 📁
