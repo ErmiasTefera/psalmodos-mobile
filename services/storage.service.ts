@@ -1,40 +1,43 @@
-import { MMKV } from "react-native-mmkv";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from "expo-file-system";
 import { getFullFilePath } from "./http-service";
-export const storage = new MMKV();
 
 // Helper functions
-export const saveMezmur = (key: string, value: any) => {
-  const mezmur = getMezmur(key);
+export const saveMezmur = async (key: string, value: any) => {
+  const mezmur = await getMezmur(key);
   if (mezmur) {
     return;
   }
-  storage.set(key, JSON.stringify(value));
+  await AsyncStorage.setItem(key, JSON.stringify(value));
 };
 
 export const saveMezmurFile = async (key: string, value: any): Promise<any> => {
-  const mezmur = getMezmur(key);
+  const mezmur = await getMezmur(key);
   await downloadFile(
     getFullFilePath(value),
     value.audio_file_name
   );
   mezmur.isDownloaded = true;
-  storage.set(key, JSON.stringify(mezmur));
+  await AsyncStorage.setItem(key, JSON.stringify(mezmur));
   return new Promise((resolve) => resolve(mezmur));
 };
 
-export const getMezmur = (key: string) => {
-  const value = storage.getString(key);
+export const getMezmur = async (key: string) => {
+  const value = await AsyncStorage.getItem(key);
   return value ? JSON.parse(value) : null;
 };
 
-export const getAllLocalMezmurs = () => {
-  const keys = storage.getAllKeys();
-    // storage.clearAll(); 
-  return keys.map((key) => getMezmur(key));
+export const getAllLocalMezmurs = async () => {
+  const keys = await AsyncStorage.getAllKeys();
+  const mezmurs = await Promise.all(
+    keys.map(async (key) => await getMezmur(key))
+  );
+  return mezmurs.filter(mezmur => mezmur !== null);
 };
 
-export const removeMezmur = (key: string) => storage.delete(key);
+export const removeMezmur = async (key: string) => {
+  await AsyncStorage.removeItem(key);
+};
 
 export const downloadFile = async (url: string, filename: string) => {
   try {

@@ -1,4 +1,3 @@
-import TrackPlayer, { PlaybackState, State } from "react-native-track-player";
 import { create } from "zustand";
 import { Mezmur } from "@/models/mezmur.model";
 import { getFullFilePath, getMezmursByCategory } from "@/services/http-service";
@@ -9,6 +8,7 @@ import {
   saveMezmur,
   saveMezmurFile,
 } from "@/services/storage.service";
+import { audioService } from "@/services/audio.service";
 import * as FileSystem from "expo-file-system";
 
 type MezmurStore = {
@@ -21,7 +21,7 @@ type MezmurStore = {
   setCurrentMezmur: (mezmur: Mezmur) => void;
   togglePlayState: (item: any) => void;
   handlePlaybackStateChange: (
-    playbackState: PlaybackState | any,
+    playbackState: any,
     index: number | undefined
   ) => void;
   filterMezmursByCategory: (categoryId: string) => void;
@@ -33,6 +33,7 @@ type MezmurStore = {
   saveMezmurFile: (key: string, value: any) => Promise<any>;
   savedMezmurs: Mezmur[];
   downloadedMezmurs: Mezmur[];
+  setupAudioListeners: () => void;
 };
 
 const useMezmurStore = create<MezmurStore>()((set) => ({
@@ -42,7 +43,7 @@ const useMezmurStore = create<MezmurStore>()((set) => ({
   currentMezmur: null,
   currentCategoryMezmurs: [],
   fetchMezmurs: async (categoryId: string) => {
-    const localMezmurs = getAllLocalMezmurs();
+    const localMezmurs = await getAllLocalMezmurs();
     let mezmurs = [];
     const { data, error } = await getMezmursByCategory(categoryId);
     if (error) {
@@ -61,9 +62,8 @@ const useMezmurStore = create<MezmurStore>()((set) => ({
       mezmurs = data;
     }
 
-    mezmurs.forEach((mezmur) => {
-      saveMezmur(mezmur.id, mezmur);
-    });
+    // Update to handle async saveMezmur
+    await Promise.all(mezmurs.map((mezmur) => saveMezmur(mezmur.id, mezmur)));
 
     set({
       mezmurList: mezmurs,
@@ -71,7 +71,7 @@ const useMezmurStore = create<MezmurStore>()((set) => ({
       currentCategoryMezmurs: mezmurs,
     });
 
-    setTracksQueue(mezmurs);
+    setupAudioListeners();
   },
   setCurrentMezmur: (mezmur: Mezmur) => {
     set({ currentMezmur: mezmur });
@@ -94,18 +94,18 @@ const useMezmurStore = create<MezmurStore>()((set) => ({
     });
   },
   handlePlaybackStateChange: (
-    playbackState: PlaybackState | any,
+    playbackState: any,
     index: number = -1
   ) => {
     set((state) => {
       return {
         mezmurList: state.mezmurList.map((mezmur, i) => {
           mezmur.isPlaying =
-            i === index && playbackState.state === State.Playing;
+            i === index && playbackState.isPlaying;
           mezmur.isLoading =
             i === index &&
-            (playbackState.state === State.Buffering ||
-              playbackState.state === State.Loading);
+            (playbackState.isBuffering ||
+              playbackState.isLoading);
           return mezmur;
         }),
       };
@@ -123,15 +123,19 @@ const useMezmurStore = create<MezmurStore>()((set) => ({
       };
     });
   },
-  saveMezmur: (key: string, value: any) => {
-    saveMezmur(key, value);
-    const mezmurs = getAllLocalMezmurs();
+  saveMezmur: async (key: string, value: any) => {
+    await saveMezmur(key, value);
+    const mezmurs = await getAllLocalMezmurs();
     set({ savedMezmurs: mezmurs });
   },
-  getMezmur: (key: string) => {
-    return getMezmur(key);
+  getMezmur: async (key: string) => {
+    return await getMezmur(key);
   },
-  removeMezmur: (key: string) => removeMezmur(key),
+  removeMezmur: async (key: string) => {
+    await removeMezmur(key);
+    const mezmurs = await getAllLocalMezmurs();
+    set({ mezmurList: mezmurs });
+  },
   fetchLocalMezmurs: () => {
     const mezmurs = getAllLocalMezmurs();
     set({ savedMezmurs: mezmurs });
@@ -141,18 +145,26 @@ const useMezmurStore = create<MezmurStore>()((set) => ({
     set({ downloadedMezmurs: prepareDownloadedMezmurs(mezmurs) });
   },
   saveMezmurFile: async (key: string, value: any): Promise<any> => {
-    const result = saveMezmurFile(key, value);
-    result.then(() => {
-      const mezmurs = getAllLocalMezmurs();
+    const result = await saveMezmurFile(key, value);
+    if (result) {
+      const mezmurs = await getAllLocalMezmurs();
       set({
         savedMezmurs: mezmurs,
         downloadedMezmurs: prepareDownloadedMezmurs(mezmurs),
       });
-    });
+    }
     return result;
   },
   savedMezmurs: [],
   downloadedMezmurs: [],
+  setupAudioListeners: () => {
+    audioService.addListener((event, data) => {
+      if (event === 'playback-status-update') {
+        // Handle playback status updates
+        console.log('Playback status:', data);
+      }
+    });
+  },
 }));
 
 const prepareDownloadedMezmurs = (mezmurs: Mezmur[]) => {
@@ -164,31 +176,5 @@ const prepareDownloadedMezmurs = (mezmurs: Mezmur[]) => {
     });
 };
 
-const setTracksQueue = async (mezmurs: Mezmur[]) => {
-  try {
-    const tracks = await TrackPlayer.getQueue();
-
-    mezmurs.forEach((mezmur, index) => {
-      const trackInfo = {
-        id: mezmur.id,
-        url: getFullFilePath(mezmur),
-        title: mezmur.title,
-        artist: mezmur.artist,
-      };
-      
-      /**
-       if the track is already in the queue skip adding it
-      */
-     const existingTrack = tracks.find((track) => track.id === mezmur.id);
-      if (existingTrack) {
-        return;
-      }
-      // add the track to the queue
-      TrackPlayer.add(trackInfo);
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 export default useMezmurStore;

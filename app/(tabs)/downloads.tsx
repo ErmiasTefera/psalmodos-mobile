@@ -1,7 +1,8 @@
 import { FlatList, Text, View } from "react-native";
 import React, { useEffect } from "react";
 import MezmurListItem from "@/components/MezmurListItem";
-import TrackPlayer, { usePlaybackState } from "react-native-track-player";
+import { usePlaybackState } from "@/hooks/useTrackPlayerEvents";
+import { audioService } from "@/services/audio.service";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useNavigationSearch } from "@/hooks/useNavigationSearch";
 import useMezmurStore from "@/store/mezmur.store";
@@ -34,9 +35,8 @@ export default function DownloadsScreen() {
   }, [title, navigation]);
 
   useEffect(() => {
-    TrackPlayer.getActiveTrackIndex().then((index) => {
-      handlePlaybackStateChange(playBackState, index);
-    });
+    // Audio service handles playback state changes automatically
+    // No need to manually track active track index
   }, [playBackState]);
 
   return (

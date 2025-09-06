@@ -1,5 +1,3 @@
-import { Track } from "react-native-track-player";
-
 export interface BaseModel {
     id: string;
     created_by_id?: string;
@@ -9,6 +7,9 @@ export interface BaseModel {
     is_active?: boolean;
 }
 
-export interface TrackObject extends Track {
+export interface TrackObject {
     id: string;
+    url: string;
+    title: string;
+    artist: string;
 }

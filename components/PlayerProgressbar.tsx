@@ -1,11 +1,12 @@
 import { memo } from "react";
 import { Text, View, ViewProps } from "react-native";
 import Slider from "@react-native-community/slider";
-import TrackPlayer, { useProgress } from "react-native-track-player";
+import { usePlaybackState } from "@/hooks/useTrackPlayerEvents";
+import { audioService } from "@/services/audio.service";
 import { formatTime } from "~/helpers/miscellaneous";
 
 export const PlayerProgressBar = memo(({ style }: ViewProps) => {
-  const trackProgress = useProgress(0);
+  const playbackState = usePlaybackState();
 
   return (
     <View style={style}>
@@ -13,22 +14,22 @@ export const PlayerProgressBar = memo(({ style }: ViewProps) => {
       <Slider
         style={{ width: "100%", height: 20 }}
         minimumValue={0}
-        maximumValue={trackProgress.duration}
-        value={trackProgress.position}
+        maximumValue={playbackState.duration}
+        value={playbackState.position}
         minimumTrackTintColor="#333"
         maximumTrackTintColor="#ccc"
         thumbTintColor="#333"
         tapToSeek={true}
-        onValueChange={async (value) => await TrackPlayer.seekTo(value)}
-        onSlidingComplete={async (value) => await TrackPlayer.seekTo(value)}
+        onValueChange={async (value) => await audioService.seekTo(value)}
+        onSlidingComplete={async (value) => await audioService.seekTo(value)}
       />
       {/* Time Indicators */}
       <View className="flex-row justify-between w-full mt-1">
         <Text className="text-gray-700 text-sm">
-          {formatTime(trackProgress.position)}
+          {formatTime(playbackState.position)}
         </Text>
         <Text className="text-gray-700 text-sm">{`-${formatTime(
-          trackProgress.duration - trackProgress.position
+          playbackState.duration - playbackState.position
         )}`}</Text>
       </View>
     </View>

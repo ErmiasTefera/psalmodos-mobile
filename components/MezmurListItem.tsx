@@ -4,10 +4,7 @@ import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Play, Pause } from "lucide-react-native";
 import { Link } from "expo-router";
-import TrackPlayer, {
-  State,
-  usePlaybackState,
-} from "react-native-track-player";
+import { audioService } from "@/services/audio.service";
 import { formatDuration } from "~/lib/utils";
 import useMezmurStore from "@/store/mezmur.store";
 import { useCurrentTrack } from "@/hooks/useTrackPlayerEvents";
@@ -20,7 +17,7 @@ export default function MezmurListItem({
   item: any;
   showDownload?: boolean;
 }) {
-  const playBackState = usePlaybackState();
+  const playBackState = audioService.getPlaybackState();
   const currentTrack = useCurrentTrack();
   const { mezmurList, togglePlayState, saveMezmurFile } = useMezmurStore();
   const [downloadState, setDownloadState] = React.useState({
@@ -29,35 +26,33 @@ export default function MezmurListItem({
   });
 
   const PlaybackIcon = () => {
-    if (currentTrack && currentTrack.id === item.id) {
-      if (
-        playBackState.state === State.Buffering ||
-        playBackState.state === State.Loading
-      ) {
-        return <ActivityIndicator size="small" color="white" />;
-      }
-      if (playBackState.state === State.Playing) {
-        return <Pause color={"white"} />;
-      }
+          if (currentTrack && currentTrack.id === item.id) {
+        if (
+          playBackState.isBuffering ||
+          playBackState.isLoading
+        ) {
+          return <ActivityIndicator size="small" color="white" />;
+        }
+        if (playBackState.isPlaying) {
+          return <Pause color={"white"} />;
+        }
     }
     return <Play color={"white"} fill={"#333"} />;
   };
 
   const handleTogglePlay = async () => {
-    const currentItemIndex = mezmurList.findIndex(
-      (mezmur) => mezmur.id === item.id
-    );
-    const currentTrack = await TrackPlayer.getActiveTrack();
-
+    const currentTrack = audioService.getCurrentTrack();
+    
     if (item.id === currentTrack?.id) {
-      if (playBackState.state === State.Playing) {
-        await TrackPlayer.pause();
+      if (playBackState.isPlaying) {
+        await audioService.pause();
       } else {
-        await TrackPlayer.play();
+        await audioService.play();
       }
     } else {
-      await TrackPlayer.skip(currentItemIndex);
-      await TrackPlayer.play();
+      // Load and play the new track
+      await audioService.loadTrack(item);
+      await audioService.play();
     }
 
     togglePlayState(item);

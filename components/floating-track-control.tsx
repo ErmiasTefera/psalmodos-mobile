@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Music } from "lucide-react-native";
 
-import TrackPlayer from "react-native-track-player";
+import { audioService } from "@/services/audio.service";
 import { useNavigation } from "expo-router";
 import { useCurrentTrack } from "~/hooks/useTrackPlayerEvents";
 import PlayerControls from "~/components/PlayerControls";
@@ -30,16 +30,11 @@ const FloatingTrackControl = () => {
   }, [navigation, currentTrack]);
 
   const getTrackData = async () => {
-    let trackIndex = await TrackPlayer.getActiveTrackIndex();
-    if (trackIndex == null) {
-      return;
+    const currentTrack = audioService.getCurrentTrack();
+    if (currentTrack) {
+      setTrackId(currentTrack.id);
+      setTrackTitle(currentTrack.title);
     }
-    let trackObject = await TrackPlayer.getTrack(trackIndex);
-    if (trackObject === null || trackObject === undefined) {
-      return;
-    }
-    setTrackId(trackObject.id);
-    setTrackTitle(trackObject.title);
   };
 
   // Navigate to Track Details

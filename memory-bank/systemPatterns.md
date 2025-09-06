@@ -69,9 +69,9 @@ API/Storage → Store → Components → User Actions → Store Updates
 ## Design Patterns
 
 ### Service Layer Pattern
-- **Audio Service**: Handles all TrackPlayer interactions
+- **Audio Service**: Handles all audio interactions using expo-audio
 - **HTTP Service**: Manages API communication with Supabase
-- **Storage Service**: Handles local data persistence with MMKV
+- **Storage Service**: Handles local data persistence with AsyncStorage
 
 ### Store Pattern
 - **Domain Separation**: Each store manages specific business logic
@@ -81,4 +81,4 @@ API/Storage → Store → Components → User Actions → Store Updates
 ### Component Composition
 - **Atomic Design**: Small, reusable components (buttons, inputs)
 - **Container/Presenter**: Logic separation between containers and presenters
-- **Hook Pattern**: Custom hooks for shared logic (useTrackPlayerEvents)
+- **Hook Pattern**: Custom hooks for shared logic (useTrackPlayerEvents, useTrackPlayerVolume)

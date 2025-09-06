@@ -4,8 +4,7 @@ import { ScrollView, View, StyleSheet, Platform } from "react-native";
 import { Text } from "@/components/ui/text";
 import MusicPlayer from "../components/player";
 import { useEffect, useState } from "react";
-import TrackPlayer, {
-} from "react-native-track-player";
+import { audioService } from "@/services/audio.service";
 import { useCurrentTrack } from "@/hooks/useTrackPlayerEvents";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { fontSize, screenPadding } from "@/constants/tokens";
@@ -28,15 +27,14 @@ export default function MezmurDetailScreen() {
   }, [id, title]);
 
   useEffect(() => {
-    TrackPlayer.getActiveTrackIndex().then((trackIndex) => {
-      currentCategoryMezmurs.find((mezmur, mezmurItemIndex) => {
-        if (mezmurItemIndex === trackIndex) {
-          setMezmurDetail(mezmur);
-          return mezmur;
-        }
-      });
-    });
-  }, [currentTrack]);
+    const currentTrack = audioService.getCurrentTrack();
+    if (currentTrack) {
+      const mezmur = currentCategoryMezmurs.find(m => m.id === currentTrack.id);
+      if (mezmur) {
+        setMezmurDetail(mezmur);
+      }
+    }
+  }, [currentTrack, currentCategoryMezmurs]);
 
   const getMezmurDetail = () => {
     currentCategoryMezmurs.find((mezmur) => {
@@ -49,13 +47,16 @@ export default function MezmurDetailScreen() {
 
   const setCurrentMezmur = async () => {
     if (mezmur) {
-      const currentItemIndex = currentCategoryMezmurs.findIndex(
-        (item) => item.id === mezmur.id );
+      const currentTrack = audioService.getCurrentTrack();
       // if the current track is not the same as the current item
-      const currentTrackIndex = await TrackPlayer.getActiveTrackIndex();
-      if (currentItemIndex !== -1 && currentTrackIndex !== currentItemIndex) {
-        await TrackPlayer.skip(currentItemIndex);
-        await TrackPlayer.play();
+      if (!currentTrack || currentTrack.id !== mezmur.id) {
+        await audioService.loadTrack({
+          id: mezmur.id,
+          url: mezmur.audio_file_path,
+          title: mezmur.title,
+          artist: mezmur.artist,
+        });
+        await audioService.play();
       }
     }
   };

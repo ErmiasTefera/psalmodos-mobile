@@ -6,10 +6,8 @@ import {
   Pause,
   SkipForward,
 } from "lucide-react-native";
-import TrackPlayer, {
-  usePlaybackState,
-  State,
-} from "react-native-track-player";
+import { usePlaybackState } from "@/hooks/useTrackPlayerEvents";
+import { audioService } from "@/services/audio.service";
 import mezmurs from "~/assets/data";
 
 const PlayerControls = ({iconSize = 32, playButtonClass = 'w-16 h-16', containerClass = 'justify-between w-1/2', loaderSize="large"}) => {
@@ -29,55 +27,34 @@ const PlayerControls = ({iconSize = 32, playButtonClass = 'w-16 h-16', container
     setupPlayer();
   }, []);
 
-  const getTrackData = async () => {
-    TrackPlayer.getQueue().then((tracks) => {
-    });
-    let currentTrackIndex = await TrackPlayer.getActiveTrackIndex();
-    if (currentTrackIndex == null) {
-      return;
-    }
-    let trackObject = await TrackPlayer.getTrack(currentTrackIndex);
-    if (trackObject === null || trackObject === undefined) {
-      return;
-    }
-    setTrackIndex(currentTrackIndex);
-  };
-
   const togglePlayBack = async () => {
-    const activeTrack = await TrackPlayer.getActiveTrack();
-    if (activeTrack != null) {
-      if (
-        playBackState.state == State.Paused ||
-        playBackState.state == State.Ready
-      ) {
-        await TrackPlayer.play();
+    const currentTrack = audioService.getCurrentTrack();
+    if (currentTrack != null) {
+      if (playBackState.isPlaying) {
+        await audioService.pause();
       } else {
-        await TrackPlayer.pause();
+        await audioService.play();
       }
     }
   };
 
   const skipToNext = async () => {
-    if (trackIndex < mezmursCount - 1) {
-      await TrackPlayer.skipToNext();
-      await getTrackData();
-      TrackPlayer.play();
-    }
+    // For now, we'll implement basic next/previous functionality
+    // You can enhance this with a proper queue system later
+    console.log('Skip to next - implement queue system');
   };
 
   const skipToPrevious = async () => {
-    if (trackIndex > 0) {
-      await TrackPlayer.skipToPrevious();
-      await getTrackData();
-      TrackPlayer.play();
-    }
+    // For now, we'll implement basic next/previous functionality
+    // You can enhance this with a proper queue system later
+    console.log('Skip to previous - implement queue system');
   };
 
   const PlaybackIcon = () => {
-    if (playBackState.state === State.Buffering || playBackState.state === State.Loading) {
+    if (playBackState.isLoading) {
       return <ActivityIndicator size='small' color="white" />;
     }
-    if (playBackState.state === State.Playing) {
+    if (playBackState.isPlaying) {
       return <Pause color={"white"} />;
     }
     return <Play color={"white"} fill={"#333"} />;

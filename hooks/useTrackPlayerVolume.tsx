@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
-import TrackPlayer from 'react-native-track-player'
+import { audioService } from '@/services/audio.service'
 
 export const useTrackPlayerVolume = () => {
 	const [volume, setVolume] = useState<number | undefined>(undefined)
 
 	const getVolume = useCallback(async () => {
-		const currentVolume = await TrackPlayer.getVolume()
+		const currentVolume = audioService.getPlaybackState().volume
 		setVolume(currentVolume)
 	}, [])
 
@@ -14,7 +14,7 @@ export const useTrackPlayerVolume = () => {
 
 		setVolume(newVolume)
 
-		await TrackPlayer.setVolume(newVolume)
+		await audioService.setVolume(newVolume)
 	}, [])
 
 	useEffect(() => {

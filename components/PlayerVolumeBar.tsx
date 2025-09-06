@@ -1,5 +1,6 @@
 import { colors } from '@/constants/tokens'
-import { useTrackPlayerVolume } from '@/hooks/useTrackPlayerVolume'
+import { usePlaybackState } from '@/hooks/useTrackPlayerEvents'
+import { audioService } from '@/services/audio.service'
 import { utilsStyles } from '@/styles'
 import { Ionicons } from '@expo/vector-icons'
 import { View, ViewProps } from 'react-native'
@@ -7,13 +8,17 @@ import { Slider } from 'react-native-awesome-slider'
 import { useSharedValue } from 'react-native-reanimated'
 
 export const PlayerVolumeBar = ({ style }: ViewProps) => {
-	const { volume, updateVolume } = useTrackPlayerVolume()
+	const playbackState = usePlaybackState()
 
 	const progress = useSharedValue(0)
 	const min = useSharedValue(0)
 	const max = useSharedValue(1)
 
-	progress.value = volume ?? 0
+	progress.value = playbackState.volume ?? 0
+
+	const updateVolume = (value: number) => {
+		audioService.setVolume(value)
+	}
 
 	return (
 		<View style={style} className='w-full'>
